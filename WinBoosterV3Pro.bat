@@ -1,7 +1,7 @@
 
 @echo off
 :: ==========================================
-:: FOR«AR MODO ADMINISTRADOR AUTOMATICAMENTE
+:: FOR√áAR MODO ADMINISTRADOR AUTOMATICAMENTE
 :: ==========================================
 net session >nul 2>&1
 if %errorlevel% neq 0 (
@@ -55,7 +55,7 @@ echo [INFO] Logs salvos em: %LOG_DIR% >> "%LOGFILE%"
 echo [INFO] Backups salvos em: %BACKUP_DIR% >> "%LOGFILE%"
 
 :: ==========================================
-:: MODO DE SIMULA«√O
+:: MODO DE SIMULA√á√ÉO
 :: ==========================================
 set "SIMULATE=0"
 
@@ -67,19 +67,19 @@ cls
 :menu
 call :PrintHeader "WinBooster V3 Pro"
 echo.
-echo               %o%[ %y% 1 %o%]%w% Criar Ponto de RestauraÁ„o         %o%[ %y% 6 %o%]%w% Verificar Temperatura
+echo               %o%[ %y% 1 %o%]%w% Criar Ponto de Restaura√ß√£o         %o%[ %y% 6 %o%]%w% Verificar Temperatura
 echo.
-echo               %o%[ %y% 2 %o%]%w% OtimizaÁ„o de Windows              %o%[ %y% 7 %o%]%w% Kit PÛs-FormataÁ„o (Winget)
+echo               %o%[ %y% 2 %o%]%w% Otimiza√ß√£o de Windows              %o%[ %y% 7 %o%]%w% Kit P√≥s-Formata√ß√£o (Winget)
 echo.
-echo               %o%[ %y% 3 %o%]%w% OtimizaÁ„o de Jogos                %o%[ %y% 8 %o%]%w% Liberar MemÛria RAM
+echo               %o%[ %y% 3 %o%]%w% Otimiza√ß√£o de Jogos                %o%[ %y% 8 %o%]%w% Liberar Mem√≥ria RAM
 echo.
-echo               %o%[ %y% 4 %o%]%w% OtimizaÁ„o de PerifÈricos          %o%[ %y% 9 %o%]%w% Melhorar Conex„o/Ping
+echo               %o%[ %y% 4 %o%]%w% Otimiza√ß√£o de Perif√©ricos          %o%[ %y% 9 %o%]%w% Melhorar Conex√£o/Ping
 echo.
-echo               %o%[ %y% 5 %o%]%w% Config. InicializaÁ„o do Windows   %o%[ %y%10 %o%]%w% Modo SimulaÁ„o (ON/OFF)
+echo               %o%[ %y% 5 %o%]%w% Config. Inicializa√ß√£o do Windows   %o%[ %y%10 %o%]%w% Modo Simula√ß√£o (ON/OFF)
 echo.
 echo               %o%[ %y%11 %o%]%w% Sair
 echo.
-if "%SIMULATE%"=="1" echo               %r%[MODO SIMULA«√O ATIVO - Nenhuma alteraÁ„o ser· feita]%w%
+if "%SIMULATE%"=="1" echo               %r%[MODO SIMULA√á√ÉO ATIVO - Nenhuma altera√ß√£o ser√° feita]%w%
 echo.
 set /p opcao="Escolha uma opcao: "
 
@@ -100,27 +100,27 @@ pause
 goto menu
 
 :: ==========================================
-:: TOGGLE MODO SIMULA«√O
+:: TOGGLE MODO SIMULA√á√ÉO
 :: ==========================================
 :toggle_simulate
 if "%SIMULATE%"=="0" (
     set "SIMULATE=1"
-    echo %y%Modo SimulaÁ„o ATIVADO. Nenhuma alteraÁ„o ser· executada.%w%
+    echo %y%Modo Simula√ß√£o ATIVADO. Nenhuma altera√ß√£o ser√° executada.%w%
 ) else (
     set "SIMULATE=0"
-    echo %g%Modo SimulaÁ„o DESATIVADO. AlteraÁıes ser„o aplicadas normalmente.%w%
+    echo %g%Modo Simula√ß√£o DESATIVADO. Altera√ß√µes ser√£o aplicadas normalmente.%w%
 )
 pause
 goto menu
 
 :: ==========================================
-:: FUN«’ES DIRETAS DO MENU PRINCIPAL
+:: FUN√á√ïES DIRETAS DO MENU PRINCIPAL
 :: ==========================================
 :ping
-call :PrintHeader "MELHORAR CONEX√O / PING"
-echo Aplicando otimizaÁıes de DNS e rede...
-call :LogAction "Otimizar Conex„o/Ping"
-if "%SIMULATE%"=="1" (echo [SIMULA«√O] ipconfig /flushdns; DNSJumper & pause & goto menu)
+call :PrintHeader "MELHORAR CONEX√ÉO / PING"
+echo Aplicando otimiza√ß√µes de DNS e rede...
+call :LogAction "Otimizar Conex√£o/Ping"
+if "%SIMULATE%"=="1" (echo [SIMULA√á√ÉO] ipconfig /flushdns; DNSJumper & pause & goto menu)
 ipconfig /flushdns
 ipconfig /release
 ipconfig /renew
@@ -128,12 +128,12 @@ call :CheckTool "DnsJumper.exe"
 if errorlevel 1 goto menu
 echo %g%[OK] Abrindo DNSJumper!%w%
 start "" "%~dp0DnsJumper.exe"
-echo %g%[OK] OtimizaÁıes de rede aplicadas!%w%
+echo %g%[OK] Otimiza√ß√µes de rede aplicadas!%w%
 pause
 goto menu
 
 :posformatacao
-call :PrintHeader "KIT P”S-FORMATA«√O (WINGET)"
+call :PrintHeader "KIT P√ìS-FORMATA√á√ÉO (WINGET)"
 echo.
 echo        %o%[ %b% 1 %o%]%w% Kit DEV/Engenharia (VS Code, Git, Python, Node.js)
 echo        %o%[ %b% 2 %o%]%w% Kit Essencial (Chrome, Discord, Spotify)
@@ -143,7 +143,7 @@ set /p wg_op="Opcao: "
 if "%wg_op%"=="3" goto menu
 if "%wg_op%"=="1" (
     call :LogAction "Instalar Kit DEV"
-    if "%SIMULATE%"=="1" (echo [SIMULA«√O] winget install Dev Kit & pause & goto menu)
+    if "%SIMULATE%"=="1" (echo [SIMULA√á√ÉO] winget install Dev Kit & pause & goto menu)
     winget install -e --id Microsoft.VisualStudioCode
     winget install -e --id Git.Git
     winget install -e --id Python.Python.3.11
@@ -152,56 +152,56 @@ if "%wg_op%"=="1" (
 )
 if "%wg_op%"=="2" (
     call :LogAction "Instalar Kit Essencial"
-    if "%SIMULATE%"=="1" (echo [SIMULA«√O] winget install Essencial Kit & pause & goto menu)
+    if "%SIMULATE%"=="1" (echo [SIMULA√á√ÉO] winget install Essencial Kit & pause & goto menu)
     winget install -e --id Google.Chrome
     winget install -e --id Discord.Discord
     winget install -e --id Spotify.Spotify
     echo %g%[OK] Kit Essencial instalado!%w%
 )
-echo %r%OpÁ„o inv·lida.%w%
+echo %r%Op√ß√£o inv√°lida.%w%
 pause
 goto menu
 
 :limparram
-call :PrintHeader "LIBERAR MEM”RIA RAM"
+call :PrintHeader "LIBERAR MEM√ìRIA RAM"
 call :CheckTool "RAMMap.exe"
 if errorlevel 1 goto menu
 call :LogAction "Limpar RAM"
-if "%SIMULATE%"=="1" (echo [SIMULA«√O] RAMMap.exe -Ew -Es & pause & goto menu)
-echo Limpando o cache de memÛria RAM...
+if "%SIMULATE%"=="1" (echo [SIMULA√á√ÉO] RAMMap.exe -Ew -Es & pause & goto menu)
+echo Limpando o cache de mem√≥ria RAM...
 "%~dp0RAMMap.exe" -Ew
 "%~dp0RAMMap.exe" -Es
-echo %g%[OK] MemÛria RAM otimizada com sucesso!%w%
+echo %g%[OK] Mem√≥ria RAM otimizada com sucesso!%w%
 pause
 goto menu
 
 :opcao_restauracao
-call :PrintHeader "CRIAR PONTO DE RESTAURA«√O"
-echo Ligando o motor de ProteÁ„o do Sistema no Kernel...
-call :LogAction "Criar Ponto de RestauraÁ„o"
-if "%SIMULATE%"=="1" (echo [SIMULA«√O] Checkpoint-Computer & pause & goto menu)
+call :PrintHeader "CRIAR PONTO DE RESTAURA√á√ÉO"
+echo Ligando o motor de Prote√ß√£o do Sistema no Kernel...
+call :LogAction "Criar Ponto de Restaura√ß√£o"
+if "%SIMULATE%"=="1" (echo [SIMULA√á√ÉO] Checkpoint-Computer & pause & goto menu)
 sc config VSS start= demand >nul 2>&1
 sc start VSS >nul 2>&1
-echo Habilitando a RestauraÁ„o no Disco C:...
+echo Habilitando a Restaura√ß√£o no Disco C:...
 powershell -Command "Enable-ComputerRestore -Drive 'C:\'" >nul 2>&1
-echo Criando o Ponto de RestauraÁ„o (isso pode demorar um pouco)...
+echo Criando o Ponto de Restaura√ß√£o (isso pode demorar um pouco)...
 powershell -Command "Checkpoint-Computer -Description 'RestorePoint by Project Prometheus' -RestorePointType 'MODIFY_SETTINGS'"
 if %errorlevel% equ 0 (
     echo.
-    echo %g%[OK] Ponto de restauraÁ„o criado com sucesso!%w%
+    echo %g%[OK] Ponto de restaura√ß√£o criado com sucesso!%w%
 ) else (
     echo.
-    echo %r%[ERRO] O Windows bloqueou a criaÁ„o. Verifique se a ProteÁ„o do Sistema n„o foi permanentemente removida da sua ISO.%w%
+    echo %r%[ERRO] O Windows bloqueou a cria√ß√£o. Verifique se a Prote√ß√£o do Sistema n√£o foi permanentemente removida da sua ISO.%w%
 )
 pause
 goto menu
 
 :autorun
-call :PrintHeader "CONFIG. INICIALIZA«√O DO WINDOWS"
+call :PrintHeader "CONFIG. INICIALIZA√á√ÉO DO WINDOWS"
 call :CheckTool "Autoruns.exe"
 if errorlevel 1 goto menu
 call :LogAction "Abrir Autoruns"
-if "%SIMULATE%"=="1" (echo [SIMULA«√O] start Autoruns.exe & pause & goto menu)
+if "%SIMULATE%"=="1" (echo [SIMULA√á√ÉO] start Autoruns.exe & pause & goto menu)
 start "" "%~dp0Autoruns.exe"
 echo %g%[OK] Autoruns aberto!%w%
 pause
@@ -212,7 +212,7 @@ call :PrintHeader "VERIFICAR TEMPERATURA"
 call :CheckTool "OpenHardwareMonitor.exe"
 if errorlevel 1 goto menu
 call :LogAction "Abrir Monitor de Temperatura"
-if "%SIMULATE%"=="1" (echo [SIMULA«√O] start OpenHardwareMonitor.exe & pause & goto menu)
+if "%SIMULATE%"=="1" (echo [SIMULA√á√ÉO] start OpenHardwareMonitor.exe & pause & goto menu)
 start "" "%~dp0OpenHardwareMonitor.exe"
 echo %g%[OK] Monitor de hardware aberto!%w%
 pause
@@ -229,36 +229,36 @@ timeout /t 3 >nul
 exit /b 0
 
 :: ==========================================
-:: MENU DE OTIMIZA«√O DO WINDOWS
+:: MENU DE OTIMIZA√á√ÉO DO WINDOWS
 :: ==========================================
 :menuwindows
-call :PrintHeader "OTIMIZA«√O DE WINDOWS"
+call :PrintHeader "OTIMIZA√á√ÉO DE WINDOWS"
 echo.
-echo                          Escolha a opÁ„o que vocÍ quer otimizar:
+echo                          Escolha a op√ß√£o que voc√™ quer otimizar:
 echo.
 echo        %o%[ %b% 1 %o%]%w% Otimizar Energia               %o%[ %b%18 %o%]%w% Desat. Overlays (Steam/Xbox)
 echo        %o%[ %b% 2 %o%]%w% Desat. Efeitos Visuais         %o%[ %b%19 %o%]%w% Otimizar Rede para Jogos
 echo        %o%[ %b% 3 %o%]%w% Tweaks de Privacidade          %o%[ %b%20 %o%]%w% Resetar Cache de Miniaturas
 echo        %o%[ %b% 4 %o%]%w% Desat. Telemetria              %o%[ %b%21 %o%]%w% Remover App Cortana
 echo        %o%[ %b% 5 %o%]%w% Desativar XBOX Totalmente      %o%[ %b%22 %o%]%w% Desat. Prefetch e Superfetch
-echo        %o%[ %b% 6 %o%]%w% Desat. RelatÛrios de Erro      %o%[ %b%23 %o%]%w% Fechar Explorer
+echo        %o%[ %b% 6 %o%]%w% Desat. Relat√≥rios de Erro      %o%[ %b%23 %o%]%w% Fechar Explorer
 echo        %o%[ %b% 7 %o%]%w% Otimizar ALT+TAB               %o%[ %b%24 %o%]%w% Iniciar Explorer
-echo        %o%[ %b% 8 %o%]%w% Desat. RelÛgio do Windows      %o%[ %b%25 %o%]%w% Desat. UAC
-echo        %o%[ %b% 9 %o%]%w% Desat. ServiÁos In˙teis        %o%[ %b%26 %o%]%w% Desat. Hyper-V
-echo        %o%[ %b%10 %o%]%w% Desat. HibernaÁ„o              %o%[ %b%27 %o%]%w% Verificar/Arrumar Arquivos
+echo        %o%[ %b% 8 %o%]%w% Desat. Rel√≥gio do Windows      %o%[ %b%25 %o%]%w% Desat. UAC
+echo        %o%[ %b% 9 %o%]%w% Desat. Servi√ßos In√∫teis        %o%[ %b%26 %o%]%w% Desat. Hyper-V
+echo        %o%[ %b%10 %o%]%w% Desat. Hiberna√ß√£o              %o%[ %b%27 %o%]%w% Verificar/Arrumar Arquivos
 echo        %o%[ %b%11 %o%]%w% Otimizar Explorer              %o%[ %b%28 %o%]%w% Limpar Cache de Rede
-echo        %o%[ %b%12 %o%]%w% Desat. IndexaÁ„o               %o%[ %b%29 %o%]%w% Limpar Arquivos Tempor·rios
-echo        %o%[ %b%13 %o%]%w% Debloater                      %o%[ %b%30 %o%]%w% Exclus„o Defender (CyberSec)
-echo        %o%[ %b%14 %o%]%w% Desat. NotificaÁıes            %o%[ %b%31 %o%]%w% Desat. Maps Manager
+echo        %o%[ %b%12 %o%]%w% Desat. Indexa√ß√£o               %o%[ %b%29 %o%]%w% Limpar Arquivos Tempor√°rios
+echo        %o%[ %b%13 %o%]%w% Debloater                      %o%[ %b%30 %o%]%w% Exclus√£o Defender (CyberSec)
+echo        %o%[ %b%14 %o%]%w% Desat. Notifica√ß√µes            %o%[ %b%31 %o%]%w% Desat. Maps Manager
 echo        %o%[ %b%15 %o%]%w% Desat. Cortana                 %o%[ %b%32 %o%]%w% Desat. TimeStamp
-echo        %o%[ %b%16 %o%]%w% Bloquear Feedback Autom·tico   %o%[ %b%33 %o%]%w% Desat. Aero Peek
+echo        %o%[ %b%16 %o%]%w% Bloquear Feedback Autom√°tico   %o%[ %b%33 %o%]%w% Desat. Aero Peek
 echo        %o%[ %b%17 %o%]%w% Desat. SmartScreen             %o%[ %b%34 %o%]%w% REINICIAR PC
 echo.
 echo        %o%[ %o%35 %o%]%o% Menu Principal%w%
 echo.
-if "%SIMULATE%"=="1" echo        %r%[MODO SIMULA«√O ATIVO]%w%
+if "%SIMULATE%"=="1" echo        %r%[MODO SIMULA√á√ÉO ATIVO]%w%
 echo.
-set /p opcao="Digite o n˙mero: "
+set /p opcao="Digite o n√∫mero: "
 
 if "%opcao%"=="35" goto menu
 if "%opcao%"=="1"  goto win_1
@@ -296,14 +296,14 @@ if "%opcao%"=="32" goto win_32
 if "%opcao%"=="33" goto win_33
 if "%opcao%"=="34" goto win_34
 
-echo %r%OpÁ„o inv·lida. Tente novamente.%w%
+echo %r%Op√ß√£o inv√°lida. Tente novamente.%w%
 pause
 goto menuwindows
 
 :win_1
 call :BackupReg "HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\VisualEffects" "win_energia"
 call :LogAction "Win: Otimizar Energia"
-if "%SIMULATE%"=="1" (echo [SIMULA«√O] powercfg & pause & goto menuwindows)
+if "%SIMULATE%"=="1" (echo [SIMULA√á√ÉO] powercfg & pause & goto menuwindows)
 echo Otimizando Energia...
 powercfg -duplicatescheme e9a42b02-d5df-448d-aa00-03f14749eb61
 powercfg.exe /setacvalueindex SCHEME_CURRENT SUB_PROCESSOR IdleDisable 0
@@ -316,7 +316,7 @@ goto menuwindows
 :win_2
 call :BackupReg "HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\VisualEffects" "win_visual"
 call :LogAction "Win: Desativar Efeitos Visuais"
-if "%SIMULATE%"=="1" (echo [SIMULA«√O] Desativar efeitos visuais & pause & goto menuwindows)
+if "%SIMULATE%"=="1" (echo [SIMULA√á√ÉO] Desativar efeitos visuais & pause & goto menuwindows)
 echo Desativando Efeitos Visuais...
 reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\VisualEffects" /v VisualFXSetting /t REG_DWORD /d 2 /f
 reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Themes\Personalize" /v EnableTransparency /t REG_DWORD /d 0 /f
@@ -329,7 +329,7 @@ goto menuwindows
 :win_3
 call :BackupReg "HKLM\SOFTWARE\Policies\Microsoft\Windows\DataCollection" "win_privacidade"
 call :LogAction "Win: Tweaks de Privacidade"
-if "%SIMULATE%"=="1" (echo [SIMULA«√O] Tweaks de privacidade & pause & goto menuwindows)
+if "%SIMULATE%"=="1" (echo [SIMULA√á√ÉO] Tweaks de privacidade & pause & goto menuwindows)
 echo Aplicando Tweaks de Privacidade...
 reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\DataCollection" /v AllowTelemetry /t REG_DWORD /d 0 /f
 reg add "HKCU\Software\Microsoft\Siuf\Rules" /v NumberOfSIUFInPeriod /t REG_DWORD /d 0 /f
@@ -344,7 +344,7 @@ goto menuwindows
 :win_4
 call :BackupReg "HKLM\SOFTWARE\Policies\Microsoft\Windows\DataCollection" "win_telemetria"
 call :LogAction "Win: Desativar Telemetria"
-if "%SIMULATE%"=="1" (echo [SIMULA«√O] Desativar telemetria & pause & goto menuwindows)
+if "%SIMULATE%"=="1" (echo [SIMULA√á√ÉO] Desativar telemetria & pause & goto menuwindows)
 echo Desativando Telemetria...
 REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\DataCollection" /v "AllowTelemetry" /t REG_DWORD /d 0 /f
 REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\AdvertisingInfo" /v "DisableWindowsAdvertising" /t REG_DWORD /d 1 /f
@@ -358,14 +358,14 @@ echo [1] Remover Xbox  [2] Restaurar Xbox  [3] Voltar
 set /p escX="Opcao: "
 if "%escX%"=="3" goto menuwindows
 if "%escX%"=="1" (
-    if "%SIMULATE%"=="1" (echo [SIMULA«√O] Remover Xbox & pause & goto menuwindows)
+    if "%SIMULATE%"=="1" (echo [SIMULA√á√ÉO] Remover Xbox & pause & goto menuwindows)
     sc stop "Xbox Game Monitoring" & sc config "Xbox Game Monitoring" start= disabled
     powershell -command "Get-AppxPackage *xboxapp* | Remove-AppxPackage"
     powershell -command "Get-AppxPackage *Microsoft.XboxGameOverlay* | Remove-AppxPackage"
     echo %g%[OK] Xbox removido!%w%
 )
 if "%escX%"=="2" (
-    if "%SIMULATE%"=="1" (echo [SIMULA«√O] Restaurar Xbox & pause & goto menuwindows)
+    if "%SIMULATE%"=="1" (echo [SIMULA√á√ÉO] Restaurar Xbox & pause & goto menuwindows)
     sc config "Xbox Game Monitoring" start= demand
     sc config "XblAuthManager" start= demand
     echo %g%[OK] Xbox restaurado!%w%
@@ -375,19 +375,19 @@ goto menuwindows
 
 :win_6
 call :BackupReg "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Windows Error Reporting" "win_erros"
-call :LogAction "Win: Desativar RelatÛrios de Erro"
-if "%SIMULATE%"=="1" (echo [SIMULA«√O] Desativar relatÛrios de erro & pause & goto menuwindows)
-echo Desativando RelatÛrios de Erro...
+call :LogAction "Win: Desativar Relat√≥rios de Erro"
+if "%SIMULATE%"=="1" (echo [SIMULA√á√ÉO] Desativar relat√≥rios de erro & pause & goto menuwindows)
+echo Desativando Relat√≥rios de Erro...
 sc stop "WerSvc" & sc config "WerSvc" start= disabled
 REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Windows Error Reporting" /v "DisableWindowsErrorReporting" /t REG_DWORD /d 1 /f
-echo %g%[OK] RelatÛrios de erro desativados!%w%
+echo %g%[OK] Relat√≥rios de erro desativados!%w%
 pause
 goto menuwindows
 
 :win_7
 call :BackupReg "HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer" "win_alttab"
 call :LogAction "Win: Otimizar ALT+TAB"
-if "%SIMULATE%"=="1" (echo [SIMULA«√O] AltTabSettings & pause & goto menuwindows)
+if "%SIMULATE%"=="1" (echo [SIMULA√á√ÉO] AltTabSettings & pause & goto menuwindows)
 echo Otimizando ALT+TAB...
 reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer" /v AltTabSettings /t REG_DWORD /D 1 /f
 taskkill /f /im explorer.exe >nul & start explorer.exe
@@ -397,51 +397,51 @@ goto menuwindows
 
 :win_8
 echo.
-echo %r%[AVISO] Esta aÁ„o ir· desativar a sincronizaÁ„o de relÛgio do Windows (w32time)%w%
+echo %r%[AVISO] Esta a√ß√£o ir√° desativar a sincroniza√ß√£o de rel√≥gio do Windows (w32time)%w%
 echo %r%         e remover o valor useplatformclock do BCD (boot). Pode afetar a%w%
-echo %r%         sincronizaÁ„o de hora do sistema. Tem certeza? (S/N)%w%
+echo %r%         sincroniza√ß√£o de hora do sistema. Tem certeza? (S/N)%w%
 echo.
 set /p conf_w8="Confirmar: "
 if /i not "%conf_w8%"=="S" goto menuwindows
 call :BackupReg "HKLM\SYSTEM\CurrentControlSet\Services\w32time" "win_relogio"
-call :LogAction "Win: Desativar RelÛgio Windows"
-if "%SIMULATE%"=="1" (echo [SIMULA«√O] Desativar w32time & pause & goto menuwindows)
-echo Desativando RelÛgio...
+call :LogAction "Win: Desativar Rel√≥gio Windows"
+if "%SIMULATE%"=="1" (echo [SIMULA√á√ÉO] Desativar w32time & pause & goto menuwindows)
+echo Desativando Rel√≥gio...
 net stop w32time >nul 2>&1 & sc config w32time start= disabled
 bcdedit /deletevalue useplatformclock >nul 2>&1
-echo %g%[OK] RelÛgio do Windows ajustado!%w%
+echo %g%[OK] Rel√≥gio do Windows ajustado!%w%
 pause
 goto menuwindows
 
 :win_9
 echo.
-echo %r%[AVISO] Esta aÁ„o ir· desativar serviÁos do Windows (Spooler, wisvc, WbioSrvc).%w%
+echo %r%[AVISO] Esta a√ß√£o ir√° desativar servi√ßos do Windows (Spooler, wisvc, WbioSrvc).%w%
 echo %r%         Isso pode desativar impressoras e biometria. Tem certeza? (S/N)%w%
 echo.
 set /p conf_w9="Confirmar: "
 if /i not "%conf_w9%"=="S" goto menuwindows
-call :LogAction "Win: Desativar ServiÁos In˙teis"
-if "%SIMULATE%"=="1" (echo [SIMULA«√O] Desativar serviÁos & pause & goto menuwindows)
-echo Desativando ServiÁos In˙teis...
+call :LogAction "Win: Desativar Servi√ßos In√∫teis"
+if "%SIMULATE%"=="1" (echo [SIMULA√á√ÉO] Desativar servi√ßos & pause & goto menuwindows)
+echo Desativando Servi√ßos In√∫teis...
 sc stop Spooler & sc config Spooler start= disabled
 sc stop wisvc & sc config wisvc start= disabled
 sc stop WbioSrvc & sc config WbioSrvc start= disabled
-echo %g%[OK] ServiÁos desativados!%w%
+echo %g%[OK] Servi√ßos desativados!%w%
 pause
 goto menuwindows
 
 :win_10
-call :LogAction "Win: Desativar HibernaÁ„o"
-if "%SIMULATE%"=="1" (echo [SIMULA«√O] powercfg -h off & pause & goto menuwindows)
+call :LogAction "Win: Desativar Hiberna√ß√£o"
+if "%SIMULATE%"=="1" (echo [SIMULA√á√ÉO] powercfg -h off & pause & goto menuwindows)
 powercfg -h off
-echo %g%[OK] HibernaÁ„o desativada!%w%
+echo %g%[OK] Hiberna√ß√£o desativada!%w%
 pause
 goto menuwindows
 
 :win_11
 call :BackupReg "HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" "win_explorer"
 call :LogAction "Win: Otimizar Explorer"
-if "%SIMULATE%"=="1" (echo [SIMULA«√O] Otimizar Explorer & pause & goto menuwindows)
+if "%SIMULATE%"=="1" (echo [SIMULA√á√ÉO] Otimizar Explorer & pause & goto menuwindows)
 echo Otimizando Explorer...
 reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" /v LaunchTo /t REG_DWORD /d 1 /f
 reg delete "HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\TypedPaths" /f >nul 2>&1
@@ -452,17 +452,17 @@ pause
 goto menuwindows
 
 :win_12
-call :LogAction "Win: Desativar IndexaÁ„o"
-if "%SIMULATE%"=="1" (echo [SIMULA«√O] sc config WSearch disabled & pause & goto menuwindows)
+call :LogAction "Win: Desativar Indexa√ß√£o"
+if "%SIMULATE%"=="1" (echo [SIMULA√á√ÉO] sc config WSearch disabled & pause & goto menuwindows)
 net stop "Windows Search" >nul 2>&1 & sc config "WSearch" start= disabled >nul 2>&1
-echo %g%[OK] IndexaÁ„o desativada!%w%
+echo %g%[OK] Indexa√ß√£o desativada!%w%
 pause
 goto menuwindows
 
 :win_13
 call :LogAction "Win: Debloater"
-if "%SIMULATE%"=="1" (echo [SIMULA«√O] Remove-AppxPackage & pause & goto menuwindows)
-echo Removendo apps padr„o...
+if "%SIMULATE%"=="1" (echo [SIMULA√á√ÉO] Remove-AppxPackage & pause & goto menuwindows)
+echo Removendo apps padr√£o...
 powershell -Command "Get-AppxPackage *officehub* | Remove-AppxPackage -ErrorAction SilentlyContinue"
 powershell -Command "Get-AppxPackage *maps* | Remove-AppxPackage -ErrorAction SilentlyContinue"
 powershell -Command "Get-AppxPackage *news* | Remove-AppxPackage -ErrorAction SilentlyContinue"
@@ -473,17 +473,17 @@ goto menuwindows
 
 :win_14
 call :BackupReg "HKCU\Software\Microsoft\Windows\CurrentVersion\PushNotifications" "win_notif"
-call :LogAction "Win: Desativar NotificaÁıes"
-if "%SIMULATE%"=="1" (echo [SIMULA«√O] ToastEnabled=0 & pause & goto menuwindows)
+call :LogAction "Win: Desativar Notifica√ß√µes"
+if "%SIMULATE%"=="1" (echo [SIMULA√á√ÉO] ToastEnabled=0 & pause & goto menuwindows)
 reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\PushNotifications" /v ToastEnabled /t REG_DWORD /d 0 /f
-echo %g%[OK] NotificaÁıes desativadas!%w%
+echo %g%[OK] Notifica√ß√µes desativadas!%w%
 pause
 goto menuwindows
 
 :win_15
 call :BackupReg "HKLM\SOFTWARE\Policies\Microsoft\Windows\Windows Search" "win_cortana"
 call :LogAction "Win: Desativar Cortana"
-if "%SIMULATE%"=="1" (echo [SIMULA«√O] AllowCortana=0 & pause & goto menuwindows)
+if "%SIMULATE%"=="1" (echo [SIMULA√á√ÉO] AllowCortana=0 & pause & goto menuwindows)
 reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\Windows Search" /v "AllowCortana" /t REG_DWORD /d 0 /f
 echo %g%[OK] Cortana desativada!%w%
 pause
@@ -492,7 +492,7 @@ goto menuwindows
 :win_16
 call :BackupReg "HKCU\Software\Microsoft\Siuf\Rules" "win_feedback"
 call :LogAction "Win: Bloquear Feedback"
-if "%SIMULATE%"=="1" (echo [SIMULA«√O] NumberOfSIUFInPeriod=0 & pause & goto menuwindows)
+if "%SIMULATE%"=="1" (echo [SIMULA√á√ÉO] NumberOfSIUFInPeriod=0 & pause & goto menuwindows)
 reg add "HKCU\Software\Microsoft\Siuf\Rules" /v NumberOfSIUFInPeriod /t REG_DWORD /d 0 /f
 echo %g%[OK] Feedback bloqueado!%w%
 pause
@@ -500,14 +500,14 @@ goto menuwindows
 
 :win_17
 echo.
-echo %r%[AVISO] Desativar o SmartScreen reduz a proteÁ„o contra downloads maliciosos.%w%
-echo %r%         Certifique-se de que sabe o que est· fazendo. Tem certeza? (S/N)%w%
+echo %r%[AVISO] Desativar o SmartScreen reduz a prote√ß√£o contra downloads maliciosos.%w%
+echo %r%         Certifique-se de que sabe o que est√° fazendo. Tem certeza? (S/N)%w%
 echo.
 set /p conf_w17="Confirmar: "
 if /i not "%conf_w17%"=="S" goto menuwindows
 call :BackupReg "HKLM\Software\Microsoft\Windows\CurrentVersion\Explorer" "win_smartscreen"
 call :LogAction "Win: Desativar SmartScreen"
-if "%SIMULATE%"=="1" (echo [SIMULA«√O] SmartScreenEnabled=Off & pause & goto menuwindows)
+if "%SIMULATE%"=="1" (echo [SIMULA√á√ÉO] SmartScreenEnabled=Off & pause & goto menuwindows)
 reg add "HKLM\Software\Microsoft\Windows\CurrentVersion\Explorer" /v SmartScreenEnabled /t REG_SZ /d Off /f
 echo %g%[OK] SmartScreen desativado!%w%
 pause
@@ -516,7 +516,7 @@ goto menuwindows
 :win_18
 call :BackupReg "HKCU\Software\Microsoft\GameBar" "win_overlays"
 call :LogAction "Win: Desativar Overlays"
-if "%SIMULATE%"=="1" (echo [SIMULA«√O] AllowAutoGameMode=0 & pause & goto menuwindows)
+if "%SIMULATE%"=="1" (echo [SIMULA√á√ÉO] AllowAutoGameMode=0 & pause & goto menuwindows)
 reg add "HKCU\Software\Microsoft\GameBar" /v "AllowAutoGameMode" /t REG_DWORD /d 0 /f
 reg add "HKCU\Software\Microsoft\GameBar" /v "ShowStartupPanel" /t REG_DWORD /d 0 /f
 echo %g%[OK] Overlays desativados!%w%
@@ -525,12 +525,12 @@ goto menuwindows
 
 :win_19
 echo.
-echo %r%[AVISO] Ajustes de rede podem afetar conexıes existentes. Tem certeza? (S/N)%w%
+echo %r%[AVISO] Ajustes de rede podem afetar conex√µes existentes. Tem certeza? (S/N)%w%
 echo.
 set /p conf_w19="Confirmar: "
 if /i not "%conf_w19%"=="S" goto menuwindows
 call :LogAction "Win: Otimizar Rede para Jogos"
-if "%SIMULATE%"=="1" (echo [SIMULA«√O] netsh tcp set global & pause & goto menuwindows)
+if "%SIMULATE%"=="1" (echo [SIMULA√á√ÉO] netsh tcp set global & pause & goto menuwindows)
 echo Otimizando Rede...
 netsh interface tcp set global autotuninglevel=normal
 netsh interface tcp set global rss=enabled
@@ -541,7 +541,7 @@ goto menuwindows
 
 :win_20
 call :LogAction "Win: Resetar Cache de Miniaturas"
-if "%SIMULATE%"=="1" (echo [SIMULA«√O] del thumbcache & pause & goto menuwindows)
+if "%SIMULATE%"=="1" (echo [SIMULA√á√ÉO] del thumbcache & pause & goto menuwindows)
 taskkill /f /im explorer.exe
 del /f /s /q %LocalAppData%\Microsoft\Windows\Explorer\iconcache* >nul 2>&1
 del /f /s /q %LocalAppData%\Microsoft\Windows\Explorer\thumbcache* >nul 2>&1
@@ -552,7 +552,7 @@ goto menuwindows
 
 :win_21
 call :LogAction "Win: Remover App Cortana"
-if "%SIMULATE%"=="1" (echo [SIMULA«√O] Remove-AppxPackage Cortana & pause & goto menuwindows)
+if "%SIMULATE%"=="1" (echo [SIMULA√á√ÉO] Remove-AppxPackage Cortana & pause & goto menuwindows)
 powershell -Command "Get-AppxPackage Microsoft.549981C3F5F10 | Remove-AppxPackage"
 echo %g%[OK] App Cortana removido!%w%
 pause
@@ -561,7 +561,7 @@ goto menuwindows
 :win_22
 call :BackupReg "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management\PrefetchParameters" "win_prefetch"
 call :LogAction "Win: Desativar Prefetch"
-if "%SIMULATE%"=="1" (echo [SIMULA«√O] SysMain disabled & pause & goto menuwindows)
+if "%SIMULATE%"=="1" (echo [SIMULA√á√ÉO] SysMain disabled & pause & goto menuwindows)
 sc stop "SysMain" >nul 2>&1 & sc config "SysMain" start= disabled >nul 2>&1
 reg add "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management\PrefetchParameters" /v EnablePrefetcher /t REG_DWORD /d 0 /f
 echo %g%[OK] Prefetch desativado!%w%
@@ -570,7 +570,7 @@ goto menuwindows
 
 :win_23
 call :LogAction "Win: Fechar Explorer"
-if "%SIMULATE%"=="1" (echo [SIMULA«√O] taskkill explorer.exe & pause & goto menuwindows)
+if "%SIMULATE%"=="1" (echo [SIMULA√á√ÉO] taskkill explorer.exe & pause & goto menuwindows)
 taskkill /f /im explorer.exe
 echo %g%[OK] Explorer fechado!%w%
 pause
@@ -578,7 +578,7 @@ goto menuwindows
 
 :win_24
 call :LogAction "Win: Iniciar Explorer"
-if "%SIMULATE%"=="1" (echo [SIMULA«√O] start explorer.exe & pause & goto menuwindows)
+if "%SIMULATE%"=="1" (echo [SIMULA√á√ÉO] start explorer.exe & pause & goto menuwindows)
 start explorer.exe
 echo %g%[OK] Explorer iniciado!%w%
 pause
@@ -586,15 +586,15 @@ goto menuwindows
 
 :win_25
 echo.
-echo %r%[AVISO - PERIGO] Desativar o UAC (Controle de Conta de Usu·rio) deixa o sistema%w%
-echo %r%                  vulner·vel a modificaÁıes n„o autorizadas. Isso È uma aÁ„o de risco.%w%
+echo %r%[AVISO - PERIGO] Desativar o UAC (Controle de Conta de Usu√°rio) deixa o sistema%w%
+echo %r%                  vulner√°vel a modifica√ß√µes n√£o autorizadas. Isso √© uma a√ß√£o de risco.%w%
 echo %r%                  Tem CERTEZA que deseja desativar? (S/N)%w%
 echo.
 set /p conf_w25="Confirmar: "
 if /i not "%conf_w25%"=="S" goto menuwindows
 call :BackupReg "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" "win_uac"
 call :LogAction "Win: Desativar UAC"
-if "%SIMULATE%"=="1" (echo [SIMULA«√O] EnableLUA=0 & pause & goto menuwindows)
+if "%SIMULATE%"=="1" (echo [SIMULA√á√ÉO] EnableLUA=0 & pause & goto menuwindows)
 reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" /v EnableLUA /t REG_DWORD /d 0 /f
 echo %g%[OK] UAC Desativado!%w%
 pause
@@ -602,12 +602,12 @@ goto menuwindows
 
 :win_26
 echo.
-echo %r%[AVISO] Desativar Hyper-V pode afetar m·quinas virtuais e WSL2. Tem certeza? (S/N)%w%
+echo %r%[AVISO] Desativar Hyper-V pode afetar m√°quinas virtuais e WSL2. Tem certeza? (S/N)%w%
 echo.
 set /p conf_w26="Confirmar: "
 if /i not "%conf_w26%"=="S" goto menuwindows
 call :LogAction "Win: Desativar Hyper-V"
-if "%SIMULATE%"=="1" (echo [SIMULA«√O] dism Disable Hyper-V & pause & goto menuwindows)
+if "%SIMULATE%"=="1" (echo [SIMULA√á√ÉO] dism Disable Hyper-V & pause & goto menuwindows)
 dism /Online /Disable-Feature:Microsoft-Hyper-V-All /NoRestart
 bcdedit /set hypervisorlaunchtype off
 echo %g%[OK] Hyper-V desativado!%w%
@@ -616,7 +616,7 @@ goto menuwindows
 
 :win_27
 call :LogAction "Win: Verificar Arquivos do Sistema"
-if "%SIMULATE%"=="1" (echo [SIMULA«√O] sfc /scannow & pause & goto menuwindows)
+if "%SIMULATE%"=="1" (echo [SIMULA√á√ÉO] sfc /scannow & pause & goto menuwindows)
 sfc /scannow
 dism /online /cleanup-image /restorehealth
 echo %g%[OK] Arquivos verificados!%w%
@@ -625,41 +625,41 @@ goto menuwindows
 
 :win_28
 call :LogAction "Win: Limpar Cache de Rede"
-if "%SIMULATE%"=="1" (echo [SIMULA«√O] flushdns winsock reset & pause & goto menuwindows)
+if "%SIMULATE%"=="1" (echo [SIMULA√á√ÉO] flushdns winsock reset & pause & goto menuwindows)
 ipconfig /flushdns & netsh winsock reset & netsh int ip reset
 echo %g%[OK] Cache de rede limpo!%w%
 pause
 goto menuwindows
 
 :win_29
-call :LogAction "Win: Limpar Tempor·rios"
-if "%SIMULATE%"=="1" (echo [SIMULA«√O] del /temp & pause & goto menuwindows)
+call :LogAction "Win: Limpar Tempor√°rios"
+if "%SIMULATE%"=="1" (echo [SIMULA√á√ÉO] del /temp & pause & goto menuwindows)
 del /s /f /q "%temp%\*.*" 2>nul
 del /s /f /q "%windir%\temp\*.*" 2>nul
 cleanmgr.exe
-echo %g%[OK] Tempor·rios limpos!%w%
+echo %g%[OK] Tempor√°rios limpos!%w%
 pause
 goto menuwindows
 
 :win_30
-call :PrintHeader "EXCLUS√O DO DEFENDER (CYBERSEC SAFE)"
+call :PrintHeader "EXCLUS√ÉO DO DEFENDER (CYBERSEC SAFE)"
 echo.
-echo %r%[AVISO] Adicionar exclus„o no Defender remove a proteÁ„o de antivÌrus para%w%
-echo %r%         essa pasta. Use apenas para pastas de desenvolvimento confi·veis.%w%
+echo %r%[AVISO] Adicionar exclus√£o no Defender remove a prote√ß√£o de antiv√≠rus para%w%
+echo %r%         essa pasta. Use apenas para pastas de desenvolvimento confi√°veis.%w%
 echo.
 echo Digite o caminho completo da sua pasta de projetos (Ex: C:\Users\Rick\Projetos)
 set /p folder_path="Caminho: "
 if not exist "%folder_path%\" (
-    echo %r%[ERRO] A pasta n„o existe.%w%
+    echo %r%[ERRO] A pasta n√£o existe.%w%
     pause
     goto menuwindows
 )
 echo.
-echo %r%[CONFIRMA«√O] Adicionar exclus„o para: %folder_path% ? (S/N)%w%
+echo %r%[CONFIRMA√á√ÉO] Adicionar exclus√£o para: %folder_path% ? (S/N)%w%
 set /p conf_w30="Confirmar: "
 if /i not "%conf_w30%"=="S" goto menuwindows
-call :LogAction "Win: Exclus„o Defender para %folder_path%"
-if "%SIMULATE%"=="1" (echo [SIMULA«√O] Add-MpPreference -ExclusionPath & pause & goto menuwindows)
+call :LogAction "Win: Exclus√£o Defender para %folder_path%"
+if "%SIMULATE%"=="1" (echo [SIMULA√á√ÉO] Add-MpPreference -ExclusionPath & pause & goto menuwindows)
 powershell -Command "Add-MpPreference -ExclusionPath '%folder_path%'"
 echo %g%[OK] Pasta blindada contra scans do Defender. O Kernel continua protegido!%w%
 pause
@@ -668,7 +668,7 @@ goto menuwindows
 :win_31
 call :BackupReg "HKLM\SYSTEM\CurrentControlSet\Services\MapsBroker" "win_maps"
 call :LogAction "Win: Desativar Maps Manager"
-if "%SIMULATE%"=="1" (echo [SIMULA«√O] MapsBroker Start=4 & pause & goto menuwindows)
+if "%SIMULATE%"=="1" (echo [SIMULA√á√ÉO] MapsBroker Start=4 & pause & goto menuwindows)
 reg add "HKLM\SYSTEM\CurrentControlSet\Services\MapsBroker" /v Start /t REG_DWORD /d 4 /f
 echo %g%[OK] Maps Broker Desativado!%w%
 pause
@@ -677,7 +677,7 @@ goto menuwindows
 :win_32
 call :BackupReg "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\FileSystem" "win_timestamp"
 call :LogAction "Win: Desativar TimeStamp"
-if "%SIMULATE%"=="1" (echo [SIMULA«√O] NtfsDisableLastAccessUpdate=1 & pause & goto menuwindows)
+if "%SIMULATE%"=="1" (echo [SIMULA√á√ÉO] NtfsDisableLastAccessUpdate=1 & pause & goto menuwindows)
 reg add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\FileSystem" /v NtfsDisableLastAccessUpdate /t REG_DWORD /d 1 /f
 echo %g%[OK] TimeStamp desativado!%w%
 pause
@@ -686,7 +686,7 @@ goto menuwindows
 :win_33
 call :BackupReg "HKEY_CURRENT_USER\Software\Microsoft\Windows\DWM" "win_aeropeek"
 call :LogAction "Win: Desativar Aero Peek"
-if "%SIMULATE%"=="1" (echo [SIMULA«√O] EnableAeroPeek=0 & pause & goto menuwindows)
+if "%SIMULATE%"=="1" (echo [SIMULA√á√ÉO] EnableAeroPeek=0 & pause & goto menuwindows)
 reg add "HKEY_CURRENT_USER\Software\Microsoft\Windows\DWM" /v EnableAeroPeek /t REG_DWORD /d 0 /f
 echo %g%[OK] Aero Peek desativado!%w%
 pause
@@ -694,7 +694,7 @@ goto menuwindows
 
 :win_34
 echo.
-echo %r%[AVISO] O PC ser· REINICIADO em 5 segundos. Salve seus arquivos! (Ctrl+C para cancelar)%w%
+echo %r%[AVISO] O PC ser√° REINICIADO em 5 segundos. Salve seus arquivos! (Ctrl+C para cancelar)%w%
 echo.
 pause
 call :LogAction "Win: Reiniciar PC"
@@ -725,7 +725,7 @@ echo        %o%[ %b%15 %o%]%w% Cult of the Lamb                     %o%[ %b%30 %
 echo.
 echo        %o%[ %o%31 %o%]%o% Voltar ao Menu Principal          %o%[ %o%32 %o%]%o% REVERTER TODOS %w%
 echo.
-if "%SIMULATE%"=="1" echo        %r%[MODO SIMULA«√O ATIVO]%w%
+if "%SIMULATE%"=="1" echo        %r%[MODO SIMULA√á√ÉO ATIVO]%w%
 echo.
 set /p jogo="Digite o numero: "
 
@@ -769,35 +769,35 @@ goto prioridadegames
 
 :revert_all_games
 call :LogAction "Games: Reverter Todas as Prioridades"
-if "%SIMULATE%"=="1" (echo [SIMULA«√O] Reverter prioridades de todos os jogos & pause & goto prioridadegames)
+if "%SIMULATE%"=="1" (echo [SIMULA√á√ÉO] Reverter prioridades de todos os jogos & pause & goto prioridadegames)
 echo Revertendo prioridades...
 for %%G in (FortniteClient-Win64-Shipping.exe GTA5.exe FiveM_b2372_GTAProcess.exe cs2.exe javaw.exe VALORANT-Win64-Shipping.exe LeagueClient.exe cod.exe r5apex.exe RobloxPlayerBeta.exe GoW.exe GoWRagnarok.exe "Multi Theft Auto.exe" gta_sa.exe eurotrucks.exe ets2.exe RainbowSix.exe CultOfTheLamb.exe ULTRAKILL.exe BloodStrike.exe ArenaBreakout.exe re4.exe re2.exe re8.exe HD-Player.exe BF2042.exe bf4.exe tlou-i.exe tlou-ii.exe tslgame.exe RocketLeague.exe Cyberpunk2077.exe Terraria.exe RDR2.exe) do (
     call :RevertGamePriority "%%~G"
 )
-echo %g%[OK] Todos os jogos revertidos ao padr„o do Windows!%w%
+echo %g%[OK] Todos os jogos revertidos ao padr√£o do Windows!%w%
 pause
 goto prioridadegames
 
 
 :: ==========================================
-:: OTIMIZA«√O DE PERIF…RICOS
+:: OTIMIZA√á√ÉO DE PERIF√âRICOS
 :: ==========================================
 :perifericos
-call :PrintHeader "OTIMIZA«√O DE PERIF…RICOS"
+call :PrintHeader "OTIMIZA√á√ÉO DE PERIF√âRICOS"
 echo.
 echo            %o%[ %b% 1 %o%]%w% Otimizar HDD                    %o%[ %b% 2 %o%]%w% Otimizar SSD
 echo            %o%[ %b% 3 %o%]%w% Verificar Temperatura           %o%[ %b% 4 %o%]%w% Otimizar Teclado
-echo            %o%[ %b% 5 %o%]%w% Otimizar Mouse                  %o%[ %b% 6 %o%]%w% Reverter OtimizaÁ„o
+echo            %o%[ %b% 5 %o%]%w% Otimizar Mouse                  %o%[ %b% 6 %o%]%w% Reverter Otimiza√ß√£o
 echo            %o%[ %o% 7 %o%]%o% Voltar ao Menu Principal%w%
 echo.
-if "%SIMULATE%"=="1" echo            %r%[MODO SIMULA«√O ATIVO]%w%
+if "%SIMULATE%"=="1" echo            %r%[MODO SIMULA√á√ÉO ATIVO]%w%
 echo.
-set /p opcao="Digite o n˙mero: "
+set /p opcao="Digite o n√∫mero: "
 
 if "%opcao%"=="7" goto menu
 if "%opcao%"=="1" (
-    call :LogAction "PerifÈrico: Otimizar HDD"
-    if "%SIMULATE%"=="1" (echo [SIMULA«√O] fsutil HDD & pause & goto perifericos)
+    call :LogAction "Perif√©rico: Otimizar HDD"
+    if "%SIMULATE%"=="1" (echo [SIMULA√á√ÉO] fsutil HDD & pause & goto perifericos)
     fsutil behavior set disableLastAccess 2
     fsutil behavior set disable8dot3 0
     echo %g%[OK] HDD Otimizado!%w%
@@ -805,8 +805,8 @@ if "%opcao%"=="1" (
     goto perifericos
 )
 if "%opcao%"=="2" (
-    call :LogAction "PerifÈrico: Otimizar SSD"
-    if "%SIMULATE%"=="1" (echo [SIMULA«√O] fsutil SSD & pause & goto perifericos)
+    call :LogAction "Perif√©rico: Otimizar SSD"
+    if "%SIMULATE%"=="1" (echo [SIMULA√á√ÉO] fsutil SSD & pause & goto perifericos)
     schtasks /Change /TN "\Microsoft\Windows\Defrag\ScheduledDefrag" /Disable >nul 2>&1
     fsutil behavior set disableLastAccess 0
     fsutil behavior set disable8dot3 1
@@ -817,7 +817,7 @@ if "%opcao%"=="2" (
 if "%opcao%"=="3" (
     call :CheckTool "OpenHardwareMonitor.exe"
     if errorlevel 1 goto perifericos
-    if "%SIMULATE%"=="1" (echo [SIMULA«√O] start OpenHardwareMonitor.exe & pause & goto perifericos)
+    if "%SIMULATE%"=="1" (echo [SIMULA√á√ÉO] start OpenHardwareMonitor.exe & pause & goto perifericos)
     start "" "%~dp0OpenHardwareMonitor.exe"
     echo %g%[OK] Monitor de hardware aberto!%w%
     pause
@@ -825,8 +825,8 @@ if "%opcao%"=="3" (
 )
 if "%opcao%"=="4" (
     call :BackupReg "HKCU\Control Panel\Keyboard" "teclado"
-    call :LogAction "PerifÈrico: Otimizar Teclado"
-    if "%SIMULATE%"=="1" (echo [SIMULA«√O] Keyboard settings & pause & goto perifericos)
+    call :LogAction "Perif√©rico: Otimizar Teclado"
+    if "%SIMULATE%"=="1" (echo [SIMULA√á√ÉO] Keyboard settings & pause & goto perifericos)
     reg add "HKCU\Control Panel\Keyboard" /v KeyboardDelay /t REG_SZ /d 0 /f
     reg add "HKCU\Control Panel\Keyboard" /v KeyboardSpeed /t REG_SZ /d 31 /f
     call :CheckTool "FilterKeysSetter.exe"
@@ -837,8 +837,8 @@ if "%opcao%"=="4" (
 )
 if "%opcao%"=="5" (
     call :BackupReg "HKCU\Control Panel\Mouse" "mouse"
-    call :LogAction "PerifÈrico: Otimizar Mouse"
-    if "%SIMULATE%"=="1" (echo [SIMULA«√O] Mouse settings & pause & goto perifericos)
+    call :LogAction "Perif√©rico: Otimizar Mouse"
+    if "%SIMULATE%"=="1" (echo [SIMULA√á√ÉO] Mouse settings & pause & goto perifericos)
     reg add "HKCU\Control Panel\Mouse" /v MouseSpeed /t REG_SZ /d 0 /f
     reg add "HKCU\Control Panel\Mouse" /v MouseThreshold1 /t REG_SZ /d 0 /f
     RUNDLL32.EXE USER32.DLL,UpdatePerUserSystemParameters ,1 ,True
@@ -847,26 +847,26 @@ if "%opcao%"=="5" (
     goto perifericos
 )
 if "%opcao%"=="6" (
-    call :LogAction "PerifÈrico: Reverter OtimizaÁıes"
-    if "%SIMULATE%"=="1" (echo [SIMULA«√O] Reverter perifÈricos & pause & goto perifericos)
+    call :LogAction "Perif√©rico: Reverter Otimiza√ß√µes"
+    if "%SIMULATE%"=="1" (echo [SIMULA√á√ÉO] Reverter perif√©ricos & pause & goto perifericos)
     reg add "HKCU\Control Panel\Mouse" /v MouseSpeed /t REG_SZ /d 1 /f
     reg add "HKCU\Control Panel\Keyboard" /v KeyboardDelay /t REG_SZ /d 1 /f
     fsutil behavior set disableLastAccess 1
-    echo %g%[OK] PerifÈricos Revertidos!%w%
+    echo %g%[OK] Perif√©ricos Revertidos!%w%
     pause
     goto perifericos
 )
-echo %r%OpÁ„o inv·lida. Tente novamente.%w%
+echo %r%Op√ß√£o inv√°lida. Tente novamente.%w%
 pause
 goto perifericos
 
 :: ==========================================
-:: FUN«’ES CENTRAIS (ENGENHARIA / REUSO)
+:: FUN√á√ïES CENTRAIS (ENGENHARIA / REUSO)
 :: ==========================================
 
 :SetGamePriority
 if "%SIMULATE%"=="1" (
-    echo [SIMULA«√O] SetGamePriority: %~1
+    echo [SIMULA√á√ÉO] SetGamePriority: %~1
     goto :eof
 )
 reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\%~1\PerfOptions" /v CpuPriorityClass /t REG_DWORD /d 3 /f >nul 2>&1
@@ -875,7 +875,7 @@ goto :eof
 
 :RevertGamePriority
 if "%SIMULATE%"=="1" (
-    echo [SIMULA«√O] RevertGamePriority: %~1
+    echo [SIMULA√á√ÉO] RevertGamePriority: %~1
     goto :eof
 )
 reg delete "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\%~1\PerfOptions" /f >nul 2>&1
@@ -885,7 +885,7 @@ goto :eof
 :CheckTool
 if not exist "%~dp0%~1" (
     echo.
-    echo %r%[ERRO CRÕTICO] %~1 n„o encontrado na pasta do script!%w%
+    echo %r%[ERRO CR√çTICO] %~1 n√£o encontrado na pasta do script!%w%
     echo %r%               Coloque o arquivo na mesma pasta que o WinBooster.bat%w%
     echo.
     pause
@@ -894,9 +894,9 @@ if not exist "%~dp0%~1" (
 exit /b 0
 
 :BackupReg
-:: Par‚metros: %~1 = chave do registro, %~2 = nome do backup
+:: Par√¢metros: %~1 = chave do registro, %~2 = nome do backup
 if "%SIMULATE%"=="1" (
-    echo [SIMULA«√O] BackupReg: %~1
+    echo [SIMULA√á√ÉO] BackupReg: %~1
     goto :eof
 )
 set "BACKUP_FILE=%BACKUP_DIR%\%~2_%STAMP%.reg"
@@ -904,7 +904,7 @@ reg export "%~1" "%BACKUP_FILE%" /y >nul 2>&1
 if exist "%BACKUP_FILE%" (
     echo %q%[BACKUP] Chave salva em: %BACKUP_FILE%%w%
 ) else (
-    echo %q%[BACKUP] Chave n„o existia ainda (n„o foi necess·rio backup).%w%
+    echo %q%[BACKUP] Chave n√£o existia ainda (n√£o foi necess√°rio backup).%w%
 )
 goto :eof
 

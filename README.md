@@ -1,179 +1,230 @@
 # 🚀 WinBooster V3 — Project Prometheus
 
-> Script `.bat` completo de otimização para Windows com foco em **performance**, **gaming** e **privacidade**.
-<img width="732" height="243" alt="menu" src="https://github.com/user-attachments/assets/885ff2c7-fbc5-4112-8791-eff3c60da79f" />
+![Windows 10/11](https://img.shields.io/badge/Windows-10%20%2F%2011-0078D6?style=flat&logo=windows)
+![License](https://img.shields.io/badge/License-MIT-green?style=flat)
+![Status](https://img.shields.io/badge/Status-Stable-brightgreen?style=flat)
+![Language](https://img.shields.io/badge/Language-Batch%20Script-orange?style=flat)
 
+> Script `.bat` de manutenção e otimização para Windows com foco em performance, gaming e privacidade — com backups automáticos, logs por execução e modo simulação.
+
+> ⚠️ **Recomendado:** crie um ponto de restauração (opção 1 do menu) antes de aplicar qualquer otimização.
 
 ---
 
+## ✅ Diferenciais
+
+- 💾 **Backups por feature** — chave de registro exportada automaticamente antes de cada modificação crítica
+- 📋 **Logs por execução** — cada sessão gera um arquivo de log com timestamp em `Logs/`
+- 🧪 **Modo simulação** — exibe o que seria executado sem fazer nenhuma alteração real
+- ✋ **Confirmação manual** — ações de risco exigem digitação explícita de `S` para prosseguir
+- 🔍 **Ferramentas externas verificadas** — o script valida se o `.exe` existe antes de tentar usá-lo
+- ↩️ **Reversível** — backups em `Backups/` + opção de ponto de restauração do sistema
+
+---
 
 ## 📋 Sobre o Projeto
 
-O **WinBooster V3** centraliza dezenas de otimizações do Windows em uma interface de menu interativa com cores ANSI e gradiente. Desenvolvido com foco em segurança: cria **backups de registro** antes de modificações críticas, registra todas as ações em **logs com data/hora**, e exige **confirmação manual** antes de ações de risco.
+O **WinBooster V3** centraliza otimizações e tarefas de manutenção do Windows em uma interface de menu CLI com cores ANSI. Projetado para ser **reversível e auditável**: toda ação relevante é logada, chaves críticas de registro são exportadas antes de serem modificadas, e operações sensíveis exigem confirmação explícita.
+
+Algumas opções são avançadas e o script sinaliza isso claramente — exibindo avisos e pedindo confirmação antes de executar.
 
 ---
 
 ## ✨ Funcionalidades
 
-### 🪟 Otimização de Windows — 34 opções
-| # | Função | Descrição |
-|---|--------|-----------|
-| 1 | Otimizar Energia | Ativa o plano Ultimate Performance |
-| 2 | Desativar Efeitos Visuais | Remove animações e transparências |
-| 3 | Tweaks de Privacidade | Desativa telemetria, DiagTrack e sugestões |
-| 4 | Desativar Telemetria | Bloqueia coleta de dados e publicidade |
-| 5 | Desativar XBOX | Remove pacotes e serviços Xbox |
-| 6 | Desativar Relatórios de Erro | Para o serviço WerSvc |
-| 7 | Otimizar ALT+TAB | Usa o switcher clássico mais leve |
-| 8 | Desativar Relógio Windows | Para w32time e ajusta BCD |
-| 9 | Desativar Serviços Inúteis | Para Spooler, wisvc e WbioSrvc |
-| 10 | Desativar Hibernação | `powercfg -h off` |
-| 11 | Otimizar Explorer | Abre no "Este Computador", limpa histórico |
-| 12 | Desativar Indexação | Para Windows Search (WSearch) |
-| 13 | Debloater | Remove OfficHub, Maps, News e Copilot |
-| 14 | Desativar Notificações | Bloqueia notificações toast |
-| 15 | Desativar Cortana | Via política de grupo |
-| 16 | Bloquear Feedback | Zera período de feedback automático |
-| 17 | Desativar SmartScreen | ⚠️ Exige confirmação |
-| 18 | Desativar Overlays | Remove overlay do Steam/Xbox GameBar |
-| 19 | Otimizar Rede para Jogos | Ajusta TCP AutoTuning e RSS |
-| 20 | Resetar Cache de Miniaturas | Limpa iconcache e thumbcache |
-| 21 | Remover App Cortana | Remove pacote UWP da Cortana |
-| 22 | Desativar Prefetch/Superfetch | Para SysMain e zera EnablePrefetcher |
-| 23 | Fechar Explorer | `taskkill /f /im explorer.exe` |
-| 24 | Iniciar Explorer | `start explorer.exe` |
-| 25 | Desativar UAC | ⚠️ Exige confirmação dupla |
-| 26 | Desativar Hyper-V | ⚠️ Afeta WSL2 e VMs |
-| 27 | Verificar/Arrumar Arquivos | `sfc /scannow` + `DISM restorehealth` |
-| 28 | Limpar Cache de Rede | flushdns + winsock reset + ip reset |
-| 29 | Limpar Temporários | Esvazia %temp% e %windir%\temp |
-| 30 | Exclusão Defender | Adiciona pasta à whitelist do Defender |
-| 31 | Desativar Maps Manager | Para o serviço MapsBroker |
-| 32 | Desativar TimeStamp | Desativa atualização de último acesso NTFS |
-| 33 | Desativar Aero Peek | Remove efeito de prévia da barra de tarefas |
-| 34 | Reiniciar PC | `shutdown /r /t 5` |
+### 🪟 Windows — ~34 opções por categoria
 
-### 🎮 Prioridade de Jogos — 30 jogos suportados
-Aplica alta prioridade de CPU via registro do Windows (`IFEO\PerfOptions\CpuPriorityClass = 3`) para os principais jogos do mercado. Inclui opção de reverter todos de uma vez.
+| Categoria | O que inclui |
+|-----------|-------------|
+| **Energia & Visual** | Plano Ultimate Performance, desativar efeitos visuais e transparências |
+| **Privacidade & Telemetria** | Bloquear DiagTrack, feedback automático e publicidade da Microsoft |
+| **Debloat** | Remover Xbox, Cortana UWP, Office Hub, News, Maps, botão Copilot |
+| **Explorer & UI** | Otimizar Explorer, ALT+TAB clássico, desativar Aero Peek, cache de miniaturas |
+| **Rede** | Flush DNS, reset Winsock/IP, ajustes TCP para baixa latência |
+| **Manutenção** | SFC + DISM, temporários, indexação, hibernação, prefetch/superfetch |
+| **Avançado ⚠️** | UAC, SmartScreen, Hyper-V, timer do sistema, serviços seletivos |
 
-**Jogos suportados:** Fortnite, GTA V, FiveM, CS2, Minecraft, Valorant, LoL, Warzone, Apex, Roblox, God of War, MTA, Euro Truck, Rainbow Six, Cult of the Lamb, ULTRAKILL, Blood Strike, Arena Breakout, RE4/RE2/Village, Free Fire, Battlefield 2042/4, The Last of Us 1/2, PUBG, Rocket League, Cyberpunk 2077, Terraria, Red Dead 2.
+> Lista completa com descrição de cada opção: [`docs/windows-tweaks.md`](docs/windows-tweaks.md)
 
-### 🖱️ Otimização de Periféricos
-- **HDD** — desativa last access, habilita nomes 8.3
-- **SSD** — desativa desfragmentação agendada e last access
-- **Teclado** — delay mínimo (0) e velocidade máxima (31)
-- **Mouse** — remove aceleração (MouseSpeed=0, Threshold=0)
+---
+
+### 🎮 Gaming — Prioridade de CPU por jogo (~30 jogos)
+
+Aplica alta prioridade via `IFEO\PerfOptions\CpuPriorityClass` no registro — sem injeção de processo, sem DLL. Inclui opção de **reverter todos** de uma vez.
+
+> Lista de jogos suportados e executáveis: [`docs/games-priority.md`](docs/games-priority.md)
+
+---
+
+### 🖱️ Periféricos
+
+- **Mouse** — remove aceleração (movimento linear, sem interpolação de velocidade)
+- **Teclado** — delay e repeat rate otimizados para resposta mais rápida
+- **HDD / SSD** — ajustes de filesystem (opção avançada; veja [`docs/peripherals.md`](docs/peripherals.md))
 - **Reverter** — restaura configurações padrão de mouse e teclado
 
-### 🛠️ Ferramentas Externas Integradas
-| Ferramenta | Função |
-|------------|--------|
-| `DnsJumper.exe` | Troca e otimiza servidor DNS |
-| `RAMMap.exe` | Limpeza profunda de cache de RAM |
-| `Autoruns.exe` | Gerencia programas de inicialização |
-| `OpenHardwareMonitor.exe` | Monitora temperatura de CPU/GPU |
-| `FilterKeysSetter.exe` | Configuração avançada de teclado |
+---
+
+### 🛠️ Ferramentas Externas (todas opcionais)
+
+| Ferramenta | Fonte oficial | Função |
+|------------|--------------|--------|
+| `DnsJumper.exe` | [Sordum.org](https://www.sordum.org/7952/) | Trocar e testar servidores DNS |
+| `RAMMap.exe` | [Sysinternals](https://learn.microsoft.com/sysinternals/downloads/rammap) | Limpeza de cache de RAM |
+| `Autoruns.exe` | [Sysinternals](https://learn.microsoft.com/sysinternals/downloads/autoruns) | Gerenciar inicialização |
+| `OpenHardwareMonitor.exe` | [openhardwaremonitor.org](https://openhardwaremonitor.org/) | Temperatura CPU/GPU |
+| `FilterKeysSetter.exe` | — | Configuração avançada de teclado |
+
+> Nenhuma ferramenta é distribuída neste repositório. Baixe de cada fonte oficial e coloque na pasta `tools/`. O script verifica se o arquivo existe antes de executar — se não encontrar, exibe erro e volta ao menu.
 
 ---
 
 ## 🔐 Segurança
 
-| Recurso | Detalhe |
-|---------|---------|
-| **Backup de Registro** | Exporta chave original antes de modificar (`./Backups/`) |
-| **Logs automáticos** | Registra ação + data/hora em `./Logs/` a cada execução |
-| **Confirmação manual** | UAC, SmartScreen, Hyper-V, Serviços, Rede e Defender pedem `S/N` |
-| **Modo Simulação** | Mostra o que faria sem executar nada (opção 10 do menu) |
-| **CheckTool** | Verifica existência de executáveis externos antes de usar |
+- 💾 **Backups de registro** em `Backups/` antes de cada mudança crítica
+- 📋 **Logs** em `Logs/` com data e hora de cada ação realizada
+- ✋ **Confirmações explícitas** para: UAC, SmartScreen, Hyper-V, serviços, rede avançada e exclusões do Defender
+- 🧪 **Modo simulação** — zero alterações reais, só exibe o que executaria
+- 🔍 **CheckTool** — valida presença de ferramentas externas antes de usá-las
+
+### O que este script NÃO faz
+
+- ❌ Não baixa arquivos da internet
+- ❌ Não executa nada remoto ou de fontes externas
+- ❌ Não usa PowerShell com `DownloadFile`, `Invoke-WebRequest` ou similares
+- ❌ Não modifica `hosts`, firewall ou rotas de rede
+- ✅ Somente executa comandos locais nativos do Windows (`reg`, `sc`, `netsh`, `powercfg`, `bcdedit`, etc.)
+
+> Em ambiente corporativo, consulte seu administrador antes de usar — especialmente as opções avançadas.
 
 ---
 
-## 🗂️ Estrutura de Pastas
+## 🗂️ Estrutura do Repositório
 
 ```
-WinBooster.bat              ← Script principal
-DnsJumper.exe               ← (opcional) Otimizador de DNS
-RAMMap.exe                  ← (opcional) Limpeza de RAM
-Autoruns.exe                ← (opcional) Gerenciar inicialização
-OpenHardwareMonitor.exe     ← (opcional) Monitor de temperatura
-FilterKeysSetter.exe        ← (opcional) Configuração de teclado
-Logs/                       ← Criado automaticamente ao iniciar
+WinBoosterV3.bat              ← Script principal
+tools/                        ← Coloque aqui as ferramentas externas (não incluídas)
+│   .gitkeep
+│   DnsJumper.exe             ← baixe da fonte oficial
+│   RAMMap.exe                ← baixe da Sysinternals
+│   Autoruns.exe              ← baixe da Sysinternals
+│   OpenHardwareMonitor.exe   ← baixe do site oficial
+Logs/                         ← Criado automaticamente ao iniciar
 │   WinBooster_2025-01-01_1430.log
-Backups/                    ← Criado automaticamente ao iniciar
+Backups/                      ← Criado automaticamente ao iniciar
 │   win_uac_2025-01-01_1430.reg
-│   win_smartscreen_2025-01-01_1431.reg
+docs/
+│   windows-tweaks.md         ← Tabela completa das ~34 opções
+│   games-priority.md         ← Lista de jogos e executáveis
+│   peripherals.md            ← Detalhes de mouse/teclado/HDD/SSD
+│   external-tools.md         ← Ferramentas, fontes e notas
+│   architecture.md           ← Arquitetura interna do script
+screenshots/
+│   menu-principal.png
+│   menu-windows.png
+│   menu-gaming.png
+LICENSE
+CHANGELOG.md
 ```
 
 ---
 
 ## 🚦 Como Usar
 
-### Método simples
-1. **Clique com o botão direito** no `WinBooster.bat`
+> **Antes de qualquer coisa:** use a opção 1 do menu para criar um ponto de restauração do sistema.
+
+### Via Explorer
+1. Clique com o botão direito em `WinBoosterV3.bat`
 2. Selecione **"Executar como administrador"**
 3. Navegue pelos menus digitando o número da opção
 
-> O script solicita elevação automaticamente via VBScript se necessário.
+> O script detecta automaticamente se está sem privilégios e solicita elevação via UAC.
 
-### Modo Simulação (debug)
-No menu principal, selecione a opção **10 — Modo Simulação** para ativar. Com ele ativo, o script exibe exatamente o que seria executado **sem fazer nenhuma alteração real**. Útil para estudar o script ou testar sem riscos.
+### Via terminal (CMD como administrador)
+```cmd
+cd C:\caminho\para\WinBooster
+WinBoosterV3.bat
+```
+
+### Modo Simulação
+Selecione a opção **10** no menu principal para ativar/desativar.
+
+Quando ativo:
+- O cabeçalho exibe `[MODO SIMULAÇÃO ATIVO - Nenhuma alteração será feita]`
+- Cada comando aparece prefixado com `[SIMULAÇÃO]` em vez de ser executado
 
 ### Restaurar um backup de registro
 1. Abra a pasta `Backups/`
-2. Dê duplo clique no arquivo `.reg` correspondente à ação que deseja reverter
-3. Confirme a importação
+2. Dê duplo clique no `.reg` correspondente à ação que deseja reverter
+3. Confirme a importação no prompt do Windows
 
 ---
 
-## ⚙️ Requisitos
+## ⚙️ Compatibilidade
 
-- **Windows 10 / 11**
-- **PowerShell** (já incluso no Windows)
-- **Privilégios de Administrador**
-- Ferramentas externas são **opcionais** — o script verifica a existência antes de usar
+| Sistema | Status |
+|---------|--------|
+| Windows 11 (23H2 / 24H2) | ✅ Testado |
+| Windows 10 (22H2) | ✅ Testado |
+| Windows 10 LTSC | ⚠️ Parcial — alguns apps UWP podem não existir |
+| Windows 7 / 8 | ❌ Não suportado |
+
+**Requisitos:**
+- PowerShell (já incluso no Windows 10/11)
+- Privilégios de Administrador
+- Ferramentas externas são todas opcionais
+
+> Algumas otimizações podem variar por hardware, driver ou edição do Windows. Cada máquina é diferente — use o modo simulação para inspecionar antes de aplicar.
 
 ---
 
-## 🏗️ Arquitetura do Script
+## 🏗️ Arquitetura (resumo)
 
 ```
-Inicialização
-├── Elevação de privilégio (VBScript)
-├── Encoding UTF-8 (chcp 65001)
-├── Variáveis de cor ANSI
-├── Criação de pastas Logs/ e Backups/
-└── Menu Principal
-    ├── :opcao_restauracao   → Ponto de restauração do sistema
-    ├── :menuwindows         → 34 tweaks de Windows
-    ├── :prioridadegames     → 30 jogos com prioridade de CPU
-    ├── :perifericos         → HDD, SSD, mouse, teclado
-    ├── :autorun             → Abre Autoruns.exe
-    ├── :tempera             → Abre OpenHardwareMonitor.exe
-    ├── :posformatacao       → Instala apps via Winget
-    ├── :limparram           → Executa RAMMap.exe
-    ├── :ping                → Flush DNS + DNSJumper
-    └── :toggle_simulate     → Liga/desliga modo simulação
-
-Funções reutilizáveis (labels auxiliares)
-├── :PrintHeader    → Cabeçalho com gradiente RGB
-├── :LogAction      → Grava ação no arquivo de log
-├── :BackupReg      → Exporta chave de registro antes de modificar
-├── :CheckTool      → Verifica existência de ferramenta externa
-├── :SetGamePriority   → Aplica prioridade de CPU no registro IFEO
-└── :RevertGamePriority → Remove prioridade do registro IFEO
+WinBoosterV3.bat
+├── Inicialização
+│   ├── Elevação de privilégio (VBScript → runas)
+│   ├── UTF-8 (chcp 65001) + cores ANSI
+│   └── Criação de Logs/ e Backups/ + log da sessão
+├── Menu Principal (11 opções)
+│   ├── :opcao_restauracao   → Ponto de restauração
+│   ├── :menuwindows         → ~34 tweaks de Windows
+│   ├── :prioridadegames     → ~30 jogos
+│   ├── :perifericos         → Mouse, teclado, HDD, SSD
+│   ├── :autorun / :tempera  → Ferramentas externas
+│   ├── :posformatacao       → Winget (kits DEV e Essencial)
+│   ├── :limparram / :ping   → RAM e DNS
+│   └── :toggle_simulate     → Modo simulação
+└── Funções Auxiliares
+    ├── :PrintHeader         → Cabeçalho com gradiente ANSI RGB
+    ├── :LogAction           → Escreve no log da sessão
+    ├── :BackupReg           → Exporta chave de registro (.reg)
+    ├── :CheckTool           → Valida presença de executável externo
+    ├── :SetGamePriority     → IFEO CpuPriorityClass = 3
+    └── :RevertGamePriority  → Remove chave IFEO
 ```
+
+> Diagrama e explicação detalhada: [`docs/architecture.md`](docs/architecture.md)
 
 ---
 
 ## ⚠️ Aviso Legal
 
-Este script realiza modificações no registro do Windows e em configurações do sistema. Use com responsabilidade. O autor não se responsabiliza por problemas causados pelo uso indevido. **Recomenda-se criar um Ponto de Restauração (opção 1) antes de aplicar otimizações.**
+Este script modifica configurações do registro e do sistema operacional. Cada máquina é diferente — algumas otimizações podem variar por hardware, driver ou edição do Windows. O autor não se responsabiliza por problemas causados pelo uso indevido.
+
+**Backups de registro são criados automaticamente antes de mudanças críticas.** Recomenda-se também criar um ponto de restauração do sistema antes de aplicar qualquer otimização.
 
 ---
 
 ## 📜 Licença
 
-Uso livre para fins pessoais e educacionais.
+Licenciado sob [MIT](LICENSE).
+
+---
+
+## 📝 Changelog
+
+Veja [`CHANGELOG.md`](CHANGELOG.md) para o histórico de versões.
 
 ---
 

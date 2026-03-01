@@ -1,0 +1,6 @@
+# Ignorar pastas geradas pelo script
+Logs/
+Backups/
+
+# Ignorar executaveis de terceiros
+*.exe

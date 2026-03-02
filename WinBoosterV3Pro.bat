@@ -636,9 +636,13 @@ goto menuwindows
 :win_27
 call :LogAction "Win: Verificar Arquivos do Sistema"
 if "%SIMULATE%"=="1" (echo [SIMULAÇÃO] sfc /scannow & pause & goto menuwindows)
-sfc /scannow >nul 2>&1
-dism /online /cleanup-image /restorehealth >nul 2>&1
-echo %g%[OK] Arquivos verificados!%w%
+echo.
+echo %y%Verificando e corrigindo arquivos corrompidos (Isso pode demorar varios minutos)...%w%
+echo.
+sfc /scannow
+dism /online /cleanup-image /restorehealth
+echo.
+echo %g%[OK] Arquivos verificados e corrigidos!%w%
 pause
 goto menuwindows
 

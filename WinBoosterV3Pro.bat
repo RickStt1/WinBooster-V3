@@ -83,7 +83,7 @@ set /p opcao="Escolha uma opcao: "
 
 if "%opcao%"=="1"  goto opcao_restauracao
 if "%opcao%"=="2"  goto menuwindows
-if "%opcao%"=="3"  goto menuwindows
+if "%opcao%"=="3"  goto prioridadegames
 if "%opcao%"=="4"  goto perifericos
 if "%opcao%"=="5"  goto autorun
 if "%opcao%"=="6"  goto tempera

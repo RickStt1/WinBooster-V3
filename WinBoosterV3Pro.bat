@@ -48,8 +48,6 @@ if not exist "%BACKUP_DIR%" mkdir "%BACKUP_DIR%"
 :: Gerar nome de log com data/hora
 for /f %%i in ('powershell -NoProfile -Command "Get-Date -Format yyyy-MM-dd_HH-mm-ss"') do set "STAMP=%%i"
 set "LOGFILE=%LOG_DIR%\WinBooster_%STAMP%.log"
-for /f "tokens=1-2 delims=:, " %%a in ('time /t') do set "HORA_LOG=%%a%%b"
-set "LOGFILE=%LOG_DIR%\WinBooster_%DATA_LOG%_%HORA_LOG%.log"
 echo [INICIO] WinBooster iniciado em %DATE% %TIME% > "%LOGFILE%"
 echo [INFO] Logs salvos em: %LOG_DIR% >> "%LOGFILE%"
 echo [INFO] Backups salvos em: %BACKUP_DIR% >> "%LOGFILE%"
@@ -85,7 +83,7 @@ set /p opcao="Escolha uma opcao: "
 
 if "%opcao%"=="1"  goto opcao_restauracao
 if "%opcao%"=="2"  goto menuwindows
-if "%opcao%"=="3"  goto prioridadegames
+if "%opcao%"=="3"  goto menuwindows
 if "%opcao%"=="4"  goto perifericos
 if "%opcao%"=="5"  goto autorun
 if "%opcao%"=="6"  goto tempera
@@ -121,9 +119,9 @@ call :PrintHeader "MELHORAR CONEXÃO / PING"
 echo Aplicando otimizações de DNS e rede...
 call :LogAction "Otimizar Conexão/Ping"
 if "%SIMULATE%"=="1" (echo [SIMULAÇÃO] ipconfig /flushdns; DNSJumper & pause & goto menu)
-ipconfig /flushdns
-ipconfig /release
-ipconfig /renew
+ipconfig /flushdns >nul 2>&1
+ipconfig /release >nul 2>&1
+ipconfig /renew >nul 2>&1
 call :CheckTool "DnsJumper.exe"
 if errorlevel 1 goto menu
 echo %g%[OK] Abrindo DNSJumper!%w%
@@ -185,7 +183,7 @@ sc start VSS >nul 2>&1
 echo Habilitando a Restauração no Disco C:...
 powershell -Command "Enable-ComputerRestore -Drive 'C:\'" >nul 2>&1
 echo Criando o Ponto de Restauração (isso pode demorar um pouco)...
-powershell -Command "Checkpoint-Computer -Description 'RestorePoint by Project Prometheus' -RestorePointType 'MODIFY_SETTINGS'"
+powershell -Command "Checkpoint-Computer -Description 'RestorePoint by Project Prometheus' -RestorePointType 'MODIFY_SETTINGS'" >nul 2>&1
 if %errorlevel% equ 0 (
     echo.
     echo %g%[OK] Ponto de restauração criado com sucesso!%w%
@@ -305,9 +303,9 @@ call :BackupReg "HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\VisualE
 call :LogAction "Win: Otimizar Energia"
 if "%SIMULATE%"=="1" (echo [SIMULAÇÃO] powercfg & pause & goto menuwindows)
 echo Otimizando Energia...
-powercfg -duplicatescheme e9a42b02-d5df-448d-aa00-03f14749eb61
-powercfg.exe /setacvalueindex SCHEME_CURRENT SUB_PROCESSOR IdleDisable 0
-powercfg.exe /setactive SCHEME_CURRENT
+powercfg -duplicatescheme e9a42b02-d5df-448d-aa00-03f14749eb61 >nul 2>&1
+powercfg.exe /setacvalueindex SCHEME_CURRENT SUB_PROCESSOR IdleDisable 0 >nul 2>&1
+powercfg.exe /setactive SCHEME_CURRENT >nul 2>&1
 powercfg.cpl
 echo %g%[OK] Energia otimizada!%w%
 pause
@@ -318,10 +316,10 @@ call :BackupReg "HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\VisualE
 call :LogAction "Win: Desativar Efeitos Visuais"
 if "%SIMULATE%"=="1" (echo [SIMULAÇÃO] Desativar efeitos visuais & pause & goto menuwindows)
 echo Desativando Efeitos Visuais...
-reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\VisualEffects" /v VisualFXSetting /t REG_DWORD /d 2 /f
-reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Themes\Personalize" /v EnableTransparency /t REG_DWORD /d 0 /f
-reg add "HKCU\Control Panel\Desktop" /v UserPreferencesMask /t REG_BINARY /d 9012038010000000 /f
-reg add "HKCU\Control Panel\Desktop" /v VisualFXSetting /t REG_DWORD /d 2 /f
+reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\VisualEffects" /v VisualFXSetting /t REG_DWORD /d 2 /f >nul 2>&1
+reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Themes\Personalize" /v EnableTransparency /t REG_DWORD /d 0 /f >nul 2>&1
+reg add "HKCU\Control Panel\Desktop" /v UserPreferencesMask /t REG_BINARY /d 9012038010000000 /f >nul 2>&1
+reg add "HKCU\Control Panel\Desktop" /v VisualFXSetting /t REG_DWORD /d 2 /f >nul 2>&1
 echo %g%[OK] Efeitos visuais desativados!%w%
 pause
 goto menuwindows
@@ -331,14 +329,28 @@ call :BackupReg "HKLM\SOFTWARE\Policies\Microsoft\Windows\DataCollection" "win_p
 call :LogAction "Win: Tweaks de Privacidade"
 if "%SIMULATE%"=="1" (echo [SIMULAÇÃO] Tweaks de privacidade & pause & goto menuwindows)
 echo Aplicando Tweaks de Privacidade...
-reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\DataCollection" /v AllowTelemetry /t REG_DWORD /d 0 /f
-reg add "HKCU\Software\Microsoft\Siuf\Rules" /v NumberOfSIUFInPeriod /t REG_DWORD /d 0 /f
+
+:: Executando comandos (erros como "servico ja parado" serao ignorados silenciosamente)
+reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\DataCollection" /v AllowTelemetry /t REG_DWORD /d 0 /f >nul 2>&1
+reg add "HKCU\Software\Microsoft\Siuf\Rules" /v NumberOfSIUFInPeriod /t REG_DWORD /d 0 /f >nul 2>&1
 schtasks /Change /TN "Microsoft\Windows\Customer Experience Improvement Program\Consolidator" /Disable >nul 2>&1
-sc stop DiagTrack & sc config DiagTrack start= disabled
-sc stop dmwappushservice & sc config dmwappushservice start= disabled
-reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" /v Start_Recommendations /t REG_DWORD /d 0 /f
+sc stop DiagTrack >nul 2>&1
+sc config DiagTrack start= disabled >nul 2>&1
+sc stop dmwappushservice >nul 2>&1
+sc config dmwappushservice start= disabled >nul 2>&1
+reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" /v Start_Recommendations /t REG_DWORD /d 0 /f >nul 2>&1
+
 echo %g%[OK] Tweaks de Privacidade aplicados!%w%
 pause
+goto menuwindows
+
+
+
+echo %g%[OK] Tweaks de Privacidade aplicados!%w%
+set
+echo Aperte ENTER para voltar ao menu...
+pause
+echo [DEBUG] Indo para menuwindows...
 goto menuwindows
 
 :win_4
@@ -346,8 +358,8 @@ call :BackupReg "HKLM\SOFTWARE\Policies\Microsoft\Windows\DataCollection" "win_t
 call :LogAction "Win: Desativar Telemetria"
 if "%SIMULATE%"=="1" (echo [SIMULAÇÃO] Desativar telemetria & pause & goto menuwindows)
 echo Desativando Telemetria...
-REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\DataCollection" /v "AllowTelemetry" /t REG_DWORD /d 0 /f
-REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\AdvertisingInfo" /v "DisableWindowsAdvertising" /t REG_DWORD /d 1 /f
+REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\DataCollection" /v "AllowTelemetry" /t REG_DWORD /d 0 /f >nul 2>&1
+REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\AdvertisingInfo" /v "DisableWindowsAdvertising" /t REG_DWORD /d 1 /f >nul 2>&1
 echo %g%[OK] Telemetria desativada!%w%
 pause
 goto menuwindows
@@ -359,15 +371,16 @@ set /p escX="Opcao: "
 if "%escX%"=="3" goto menuwindows
 if "%escX%"=="1" (
     if "%SIMULATE%"=="1" (echo [SIMULAÇÃO] Remover Xbox & pause & goto menuwindows)
-    sc stop "Xbox Game Monitoring" & sc config "Xbox Game Monitoring" start= disabled
-    powershell -command "Get-AppxPackage *xboxapp* | Remove-AppxPackage"
-    powershell -command "Get-AppxPackage *Microsoft.XboxGameOverlay* | Remove-AppxPackage"
+    sc stop "Xbox Game Monitoring" >nul 2>&1
+    sc config "Xbox Game Monitoring" start= disabled >nul 2>&1
+    powershell -command "Get-AppxPackage *xboxapp* | Remove-AppxPackage" >nul 2>&1
+    powershell -command "Get-AppxPackage *Microsoft.XboxGameOverlay* | Remove-AppxPackage" >nul 2>&1
     echo %g%[OK] Xbox removido!%w%
 )
 if "%escX%"=="2" (
     if "%SIMULATE%"=="1" (echo [SIMULAÇÃO] Restaurar Xbox & pause & goto menuwindows)
-    sc config "Xbox Game Monitoring" start= demand
-    sc config "XblAuthManager" start= demand
+    sc config "Xbox Game Monitoring" start= demand >nul 2>&1
+    sc config "XblAuthManager" start= demand >nul 2>&1
     echo %g%[OK] Xbox restaurado!%w%
 )
 pause
@@ -378,8 +391,9 @@ call :BackupReg "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Windows 
 call :LogAction "Win: Desativar Relatórios de Erro"
 if "%SIMULATE%"=="1" (echo [SIMULAÇÃO] Desativar relatórios de erro & pause & goto menuwindows)
 echo Desativando Relatórios de Erro...
-sc stop "WerSvc" & sc config "WerSvc" start= disabled
-REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Windows Error Reporting" /v "DisableWindowsErrorReporting" /t REG_DWORD /d 1 /f
+sc stop "WerSvc" >nul 2>&1
+sc config "WerSvc" start= disabled >nul 2>&1
+REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Windows Error Reporting" /v "DisableWindowsErrorReporting" /t REG_DWORD /d 1 /f >nul 2>&1
 echo %g%[OK] Relatórios de erro desativados!%w%
 pause
 goto menuwindows
@@ -389,8 +403,8 @@ call :BackupReg "HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer" "win_a
 call :LogAction "Win: Otimizar ALT+TAB"
 if "%SIMULATE%"=="1" (echo [SIMULAÇÃO] AltTabSettings & pause & goto menuwindows)
 echo Otimizando ALT+TAB...
-reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer" /v AltTabSettings /t REG_DWORD /D 1 /f
-taskkill /f /im explorer.exe >nul & start explorer.exe
+reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer" /v AltTabSettings /t REG_DWORD /D 1 /f >nul 2>&1
+taskkill /f /im explorer.exe >nul 2>&1 & start explorer.exe >nul 2>&1
 echo %g%[OK] ALT+TAB otimizado!%w%
 pause
 goto menuwindows
@@ -407,7 +421,8 @@ call :BackupReg "HKLM\SYSTEM\CurrentControlSet\Services\w32time" "win_relogio"
 call :LogAction "Win: Desativar Relógio Windows"
 if "%SIMULATE%"=="1" (echo [SIMULAÇÃO] Desativar w32time & pause & goto menuwindows)
 echo Desativando Relógio...
-net stop w32time >nul 2>&1 & sc config w32time start= disabled
+net stop w32time >nul 2>&1
+sc config w32time start= disabled >nul 2>&1
 bcdedit /deletevalue useplatformclock >nul 2>&1
 echo %g%[OK] Relógio do Windows ajustado!%w%
 pause
@@ -423,17 +438,20 @@ if /i not "%conf_w9%"=="S" goto menuwindows
 call :LogAction "Win: Desativar Serviços Inúteis"
 if "%SIMULATE%"=="1" (echo [SIMULAÇÃO] Desativar serviços & pause & goto menuwindows)
 echo Desativando Serviços Inúteis...
-sc stop Spooler & sc config Spooler start= disabled
-sc stop wisvc & sc config wisvc start= disabled
-sc stop WbioSrvc & sc config WbioSrvc start= disabled
+sc stop Spooler >nul 2>&1
+sc config Spooler start= disabled >nul 2>&1
+sc stop wisvc >nul 2>&1
+sc config wisvc start= disabled >nul 2>&1
+sc stop WbioSrvc >nul 2>&1
+sc config WbioSrvc start= disabled >nul 2>&1
 echo %g%[OK] Serviços desativados!%w%
 pause
 goto menuwindows
 
 :win_10
 call :LogAction "Win: Desativar Hibernação"
-if "%SIMULATE%"=="1" (echo [SIMULAÇÃO] powercfg -h off & pause & goto menuwindows)
-powercfg -h off
+echo Desativando Hibernação...
+powercfg -h off >nul 2>&1
 echo %g%[OK] Hibernação desativada!%w%
 pause
 goto menuwindows
@@ -443,10 +461,10 @@ call :BackupReg "HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\Advance
 call :LogAction "Win: Otimizar Explorer"
 if "%SIMULATE%"=="1" (echo [SIMULAÇÃO] Otimizar Explorer & pause & goto menuwindows)
 echo Otimizando Explorer...
-reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" /v LaunchTo /t REG_DWORD /d 1 /f
+reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" /v LaunchTo /t REG_DWORD /d 1 /f >nul 2>&1
 reg delete "HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\TypedPaths" /f >nul 2>&1
-reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer" /v ShowRecent /t REG_DWORD /d 0 /f
-taskkill /f /im explorer.exe >nul & start explorer.exe
+reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer" /v ShowRecent /t REG_DWORD /d 0 /f >nul 2>&1
+taskkill /f /im explorer.exe >nul 2>&1 & start explorer.exe >nul 2>&1
 echo %g%[OK] Explorer otimizado!%w%
 pause
 goto menuwindows
@@ -454,7 +472,8 @@ goto menuwindows
 :win_12
 call :LogAction "Win: Desativar Indexação"
 if "%SIMULATE%"=="1" (echo [SIMULAÇÃO] sc config WSearch disabled & pause & goto menuwindows)
-net stop "Windows Search" >nul 2>&1 & sc config "WSearch" start= disabled >nul 2>&1
+net stop "Windows Search" >nul 2>&1
+sc config "WSearch" start= disabled >nul 2>&1
 echo %g%[OK] Indexação desativada!%w%
 pause
 goto menuwindows
@@ -463,10 +482,10 @@ goto menuwindows
 call :LogAction "Win: Debloater"
 if "%SIMULATE%"=="1" (echo [SIMULAÇÃO] Remove-AppxPackage & pause & goto menuwindows)
 echo Removendo apps padrão...
-powershell -Command "Get-AppxPackage *officehub* | Remove-AppxPackage -ErrorAction SilentlyContinue"
-powershell -Command "Get-AppxPackage *maps* | Remove-AppxPackage -ErrorAction SilentlyContinue"
-powershell -Command "Get-AppxPackage *news* | Remove-AppxPackage -ErrorAction SilentlyContinue"
-reg add "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" /v ShowCopilotButton /t REG_DWORD /d 0 /f
+powershell -Command "Get-AppxPackage *officehub* | Remove-AppxPackage -ErrorAction SilentlyContinue" >nul 2>&1
+powershell -Command "Get-AppxPackage *maps* | Remove-AppxPackage -ErrorAction SilentlyContinue" >nul 2>&1
+powershell -Command "Get-AppxPackage *news* | Remove-AppxPackage -ErrorAction SilentlyContinue" >nul 2>&1
+reg add "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" /v ShowCopilotButton /t REG_DWORD /d 0 /f >nul 2>&1
 echo %g%[OK] Debloater aplicado!%w%
 pause
 goto menuwindows
@@ -475,7 +494,7 @@ goto menuwindows
 call :BackupReg "HKCU\Software\Microsoft\Windows\CurrentVersion\PushNotifications" "win_notif"
 call :LogAction "Win: Desativar Notificações"
 if "%SIMULATE%"=="1" (echo [SIMULAÇÃO] ToastEnabled=0 & pause & goto menuwindows)
-reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\PushNotifications" /v ToastEnabled /t REG_DWORD /d 0 /f
+reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\PushNotifications" /v ToastEnabled /t REG_DWORD /d 0 /f >nul 2>&1
 echo %g%[OK] Notificações desativadas!%w%
 pause
 goto menuwindows
@@ -484,7 +503,7 @@ goto menuwindows
 call :BackupReg "HKLM\SOFTWARE\Policies\Microsoft\Windows\Windows Search" "win_cortana"
 call :LogAction "Win: Desativar Cortana"
 if "%SIMULATE%"=="1" (echo [SIMULAÇÃO] AllowCortana=0 & pause & goto menuwindows)
-reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\Windows Search" /v "AllowCortana" /t REG_DWORD /d 0 /f
+reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\Windows Search" /v "AllowCortana" /t REG_DWORD /d 0 /f >nul 2>&1
 echo %g%[OK] Cortana desativada!%w%
 pause
 goto menuwindows
@@ -508,7 +527,7 @@ if /i not "%conf_w17%"=="S" goto menuwindows
 call :BackupReg "HKLM\Software\Microsoft\Windows\CurrentVersion\Explorer" "win_smartscreen"
 call :LogAction "Win: Desativar SmartScreen"
 if "%SIMULATE%"=="1" (echo [SIMULAÇÃO] SmartScreenEnabled=Off & pause & goto menuwindows)
-reg add "HKLM\Software\Microsoft\Windows\CurrentVersion\Explorer" /v SmartScreenEnabled /t REG_SZ /d Off /f
+reg add "HKLM\Software\Microsoft\Windows\CurrentVersion\Explorer" /v SmartScreenEnabled /t REG_SZ /d Off /f >nul 2>&1
 echo %g%[OK] SmartScreen desativado!%w%
 pause
 goto menuwindows
@@ -517,8 +536,8 @@ goto menuwindows
 call :BackupReg "HKCU\Software\Microsoft\GameBar" "win_overlays"
 call :LogAction "Win: Desativar Overlays"
 if "%SIMULATE%"=="1" (echo [SIMULAÇÃO] AllowAutoGameMode=0 & pause & goto menuwindows)
-reg add "HKCU\Software\Microsoft\GameBar" /v "AllowAutoGameMode" /t REG_DWORD /d 0 /f
-reg add "HKCU\Software\Microsoft\GameBar" /v "ShowStartupPanel" /t REG_DWORD /d 0 /f
+reg add "HKCU\Software\Microsoft\GameBar" /v "AllowAutoGameMode" /t REG_DWORD /d 0 /f >nul 2>&1
+reg add "HKCU\Software\Microsoft\GameBar" /v "ShowStartupPanel" /t REG_DWORD /d 0 /f >nul 2>&1
 echo %g%[OK] Overlays desativados!%w%
 pause
 goto menuwindows
@@ -532,9 +551,9 @@ if /i not "%conf_w19%"=="S" goto menuwindows
 call :LogAction "Win: Otimizar Rede para Jogos"
 if "%SIMULATE%"=="1" (echo [SIMULAÇÃO] netsh tcp set global & pause & goto menuwindows)
 echo Otimizando Rede...
-netsh interface tcp set global autotuninglevel=normal
-netsh interface tcp set global rss=enabled
-netsh interface tcp set global chimney=disabled
+netsh interface tcp set global autotuninglevel=normal >nul 2>&1
+netsh interface tcp set global rss=enabled >nul 2>&1
+netsh interface tcp set global chimney=disabled >nul 2>&1
 echo %g%[OK] Rede otimizada!%w%
 pause
 goto menuwindows
@@ -542,10 +561,10 @@ goto menuwindows
 :win_20
 call :LogAction "Win: Resetar Cache de Miniaturas"
 if "%SIMULATE%"=="1" (echo [SIMULAÇÃO] del thumbcache & pause & goto menuwindows)
-taskkill /f /im explorer.exe
+taskkill /f /im explorer.exe >nul 2>&1
 del /f /s /q %LocalAppData%\Microsoft\Windows\Explorer\iconcache* >nul 2>&1
 del /f /s /q %LocalAppData%\Microsoft\Windows\Explorer\thumbcache* >nul 2>&1
-start explorer.exe
+start explorer.exe >nul 2>&1
 echo %g%[OK] Cache limpo!%w%
 pause
 goto menuwindows
@@ -553,7 +572,7 @@ goto menuwindows
 :win_21
 call :LogAction "Win: Remover App Cortana"
 if "%SIMULATE%"=="1" (echo [SIMULAÇÃO] Remove-AppxPackage Cortana & pause & goto menuwindows)
-powershell -Command "Get-AppxPackage Microsoft.549981C3F5F10 | Remove-AppxPackage"
+powershell -Command "Get-AppxPackage Microsoft.549981C3F5F10 | Remove-AppxPackage" >nul 2>&1
 echo %g%[OK] App Cortana removido!%w%
 pause
 goto menuwindows
@@ -563,7 +582,7 @@ call :BackupReg "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Ma
 call :LogAction "Win: Desativar Prefetch"
 if "%SIMULATE%"=="1" (echo [SIMULAÇÃO] SysMain disabled & pause & goto menuwindows)
 sc stop "SysMain" >nul 2>&1 & sc config "SysMain" start= disabled >nul 2>&1
-reg add "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management\PrefetchParameters" /v EnablePrefetcher /t REG_DWORD /d 0 /f
+reg add "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management\PrefetchParameters" /v EnablePrefetcher /t REG_DWORD /d 0 /f >nul 2>&1
 echo %g%[OK] Prefetch desativado!%w%
 pause
 goto menuwindows
@@ -571,7 +590,7 @@ goto menuwindows
 :win_23
 call :LogAction "Win: Fechar Explorer"
 if "%SIMULATE%"=="1" (echo [SIMULAÇÃO] taskkill explorer.exe & pause & goto menuwindows)
-taskkill /f /im explorer.exe
+taskkill /f /im explorer.exe >nul 2>&1
 echo %g%[OK] Explorer fechado!%w%
 pause
 goto menuwindows
@@ -579,7 +598,7 @@ goto menuwindows
 :win_24
 call :LogAction "Win: Iniciar Explorer"
 if "%SIMULATE%"=="1" (echo [SIMULAÇÃO] start explorer.exe & pause & goto menuwindows)
-start explorer.exe
+start explorer.exe >nul 2>&1
 echo %g%[OK] Explorer iniciado!%w%
 pause
 goto menuwindows
@@ -595,7 +614,7 @@ if /i not "%conf_w25%"=="S" goto menuwindows
 call :BackupReg "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" "win_uac"
 call :LogAction "Win: Desativar UAC"
 if "%SIMULATE%"=="1" (echo [SIMULAÇÃO] EnableLUA=0 & pause & goto menuwindows)
-reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" /v EnableLUA /t REG_DWORD /d 0 /f
+reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" /v EnableLUA /t REG_DWORD /d 0 /f >nul 2>&1
 echo %g%[OK] UAC Desativado!%w%
 pause
 goto menuwindows
@@ -608,8 +627,8 @@ set /p conf_w26="Confirmar: "
 if /i not "%conf_w26%"=="S" goto menuwindows
 call :LogAction "Win: Desativar Hyper-V"
 if "%SIMULATE%"=="1" (echo [SIMULAÇÃO] dism Disable Hyper-V & pause & goto menuwindows)
-dism /Online /Disable-Feature:Microsoft-Hyper-V-All /NoRestart
-bcdedit /set hypervisorlaunchtype off
+dism /Online /Disable-Feature:Microsoft-Hyper-V-All /NoRestart >nul 2>&1
+bcdedit /set hypervisorlaunchtype off >nul 2>&1
 echo %g%[OK] Hyper-V desativado!%w%
 pause
 goto menuwindows
@@ -617,8 +636,8 @@ goto menuwindows
 :win_27
 call :LogAction "Win: Verificar Arquivos do Sistema"
 if "%SIMULATE%"=="1" (echo [SIMULAÇÃO] sfc /scannow & pause & goto menuwindows)
-sfc /scannow
-dism /online /cleanup-image /restorehealth
+sfc /scannow >nul 2>&1
+dism /online /cleanup-image /restorehealth >nul 2>&1
 echo %g%[OK] Arquivos verificados!%w%
 pause
 goto menuwindows
@@ -641,26 +660,39 @@ echo %g%[OK] Temporários limpos!%w%
 pause
 goto menuwindows
 
-:win_30
-call :PrintHeader "EXCLUSÃO DO DEFENDER (CYBERSEC SAFE)"
-echo.
-echo %r%[AVISO] Adicionar exclusão no Defender remove a proteção de antivírus para%w%
-echo %r%         essa pasta. Use apenas para pastas de desenvolvimento confiáveis.%w%
-echo.
-echo Digite o caminho completo da sua pasta de projetos (Ex: C:\Users\Rick\Projetos)
-set /p folder_path="Caminho: "
-if not exist "%folder_path%\" (
-    echo %r%[ERRO] A pasta não existe.%w%
+:win_3
+call :BackupReg "HKLM\SOFTWARE\Policies\Microsoft\Windows\DataCollection" "win_privacidade"
+call :LogAction "Win: Tweaks de Privacidade"
+if "%SIMULATE%"=="1" (echo [SIMULAÇÃO] Tweaks de privacidade & pause & goto menuwindows)
+echo Aplicando Tweaks de Privacidade...
+
+set "_err=0"
+reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\DataCollection" /v AllowTelemetry /t REG_DWORD /d 0 /f >nul 2>&1 || set "_err=1"
+reg add "HKCU\Software\Microsoft\Siuf\Rules" /v NumberOfSIUFInPeriod /t REG_DWORD /d 0 /f >nul 2>&1 || set "_err=1"
+schtasks /Change /TN "Microsoft\Windows\Customer Experience Improvement Program\Consolidator" /Disable >nul 2>&1 || set "_err=1"
+sc stop DiagTrack >nul 2>&1 || set "_err=1"
+sc config DiagTrack start= disabled >nul 2>&1 || set "_err=1"
+sc stop dmwappushservice >nul 2>&1 || set "_err=1"
+sc config dmwappushservice start= disabled >nul 2>&1 || set "_err=1"
+reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" /v Start_Recommendations /t REG_DWORD /d 0 /f >nul 2>&1 || set "_err=1"
+
+if "%_err%"=="1" (
+    echo %r%[AVISO] Alguns tweaks falharam ou ja estavam desativados.%w%
     pause
     goto menuwindows
 )
+
+echo %g%[OK] Tweaks de Privacidade aplicados!%w%
+pause
+goto menuwindows
+
 echo.
 echo %r%[CONFIRMAÇÃO] Adicionar exclusão para: %folder_path% ? (S/N)%w%
 set /p conf_w30="Confirmar: "
 if /i not "%conf_w30%"=="S" goto menuwindows
 call :LogAction "Win: Exclusão Defender para %folder_path%"
 if "%SIMULATE%"=="1" (echo [SIMULAÇÃO] Add-MpPreference -ExclusionPath & pause & goto menuwindows)
-powershell -Command "Add-MpPreference -ExclusionPath '%folder_path%'"
+powershell -Command "Add-MpPreference -ExclusionPath '%folder_path%'" >nul 2>&1
 echo %g%[OK] Pasta blindada contra scans do Defender. O Kernel continua protegido!%w%
 pause
 goto menuwindows
@@ -669,7 +701,7 @@ goto menuwindows
 call :BackupReg "HKLM\SYSTEM\CurrentControlSet\Services\MapsBroker" "win_maps"
 call :LogAction "Win: Desativar Maps Manager"
 if "%SIMULATE%"=="1" (echo [SIMULAÇÃO] MapsBroker Start=4 & pause & goto menuwindows)
-reg add "HKLM\SYSTEM\CurrentControlSet\Services\MapsBroker" /v Start /t REG_DWORD /d 4 /f
+reg add "HKLM\SYSTEM\CurrentControlSet\Services\MapsBroker" /v Start /t REG_DWORD /d 4 /f >nul 2>&1
 echo %g%[OK] Maps Broker Desativado!%w%
 pause
 goto menuwindows
@@ -678,7 +710,7 @@ goto menuwindows
 call :BackupReg "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\FileSystem" "win_timestamp"
 call :LogAction "Win: Desativar TimeStamp"
 if "%SIMULATE%"=="1" (echo [SIMULAÇÃO] NtfsDisableLastAccessUpdate=1 & pause & goto menuwindows)
-reg add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\FileSystem" /v NtfsDisableLastAccessUpdate /t REG_DWORD /d 1 /f
+reg add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\FileSystem" /v NtfsDisableLastAccessUpdate /t REG_DWORD /d 1 /f >nul 2>&1
 echo %g%[OK] TimeStamp desativado!%w%
 pause
 goto menuwindows
@@ -687,7 +719,7 @@ goto menuwindows
 call :BackupReg "HKEY_CURRENT_USER\Software\Microsoft\Windows\DWM" "win_aeropeek"
 call :LogAction "Win: Desativar Aero Peek"
 if "%SIMULATE%"=="1" (echo [SIMULAÇÃO] EnableAeroPeek=0 & pause & goto menuwindows)
-reg add "HKEY_CURRENT_USER\Software\Microsoft\Windows\DWM" /v EnableAeroPeek /t REG_DWORD /d 0 /f
+reg add "HKEY_CURRENT_USER\Software\Microsoft\Windows\DWM" /v EnableAeroPeek /t REG_DWORD /d 0 /f >nul 2>&1
 echo %g%[OK] Aero Peek desativado!%w%
 pause
 goto menuwindows
@@ -798,8 +830,8 @@ if "%opcao%"=="7" goto menu
 if "%opcao%"=="1" (
     call :LogAction "Periférico: Otimizar HDD"
     if "%SIMULATE%"=="1" (echo [SIMULAÇÃO] fsutil HDD & pause & goto perifericos)
-    fsutil behavior set disableLastAccess 2
-    fsutil behavior set disable8dot3 0
+    fsutil behavior set disableLastAccess 2 >nul 2>&1
+    fsutil behavior set disable8dot3 0 >nul 2>&1
     echo %g%[OK] HDD Otimizado!%w%
     pause
     goto perifericos
@@ -808,8 +840,8 @@ if "%opcao%"=="2" (
     call :LogAction "Periférico: Otimizar SSD"
     if "%SIMULATE%"=="1" (echo [SIMULAÇÃO] fsutil SSD & pause & goto perifericos)
     schtasks /Change /TN "\Microsoft\Windows\Defrag\ScheduledDefrag" /Disable >nul 2>&1
-    fsutil behavior set disableLastAccess 0
-    fsutil behavior set disable8dot3 1
+    fsutil behavior set disableLastAccess 0 >nul 2>&1
+    fsutil behavior set disable8dot3 1 >nul 2>&1
     echo %g%[OK] SSD Otimizado!%w%
     pause
     goto perifericos
@@ -827,8 +859,8 @@ if "%opcao%"=="4" (
     call :BackupReg "HKCU\Control Panel\Keyboard" "teclado"
     call :LogAction "Periférico: Otimizar Teclado"
     if "%SIMULATE%"=="1" (echo [SIMULAÇÃO] Keyboard settings & pause & goto perifericos)
-    reg add "HKCU\Control Panel\Keyboard" /v KeyboardDelay /t REG_SZ /d 0 /f
-    reg add "HKCU\Control Panel\Keyboard" /v KeyboardSpeed /t REG_SZ /d 31 /f
+    reg add "HKCU\Control Panel\Keyboard" /v KeyboardDelay /t REG_SZ /d 0 /f >nul 2>&1
+    reg add "HKCU\Control Panel\Keyboard" /v KeyboardSpeed /t REG_SZ /d 31 /f >nul 2>&1
     call :CheckTool "FilterKeysSetter.exe"
     if not errorlevel 1 start "" "%~dp0FilterKeysSetter.exe"
     echo %g%[OK] Teclado Otimizado!%w%
@@ -839,9 +871,9 @@ if "%opcao%"=="5" (
     call :BackupReg "HKCU\Control Panel\Mouse" "mouse"
     call :LogAction "Periférico: Otimizar Mouse"
     if "%SIMULATE%"=="1" (echo [SIMULAÇÃO] Mouse settings & pause & goto perifericos)
-    reg add "HKCU\Control Panel\Mouse" /v MouseSpeed /t REG_SZ /d 0 /f
-    reg add "HKCU\Control Panel\Mouse" /v MouseThreshold1 /t REG_SZ /d 0 /f
-    RUNDLL32.EXE USER32.DLL,UpdatePerUserSystemParameters ,1 ,True
+    reg add "HKCU\Control Panel\Mouse" /v MouseSpeed /t REG_SZ /d 0 /f >nul 2>&1
+    reg add "HKCU\Control Panel\Mouse" /v MouseThreshold1 /t REG_SZ /d 0 /f >nul 2>&1
+    RUNDLL32.EXE USER32.DLL,UpdatePerUserSystemParameters ,1 ,True >nul 2>&1
     echo %g%[OK] Mouse otimizado!%w%
     pause
     goto perifericos
@@ -849,9 +881,9 @@ if "%opcao%"=="5" (
 if "%opcao%"=="6" (
     call :LogAction "Periférico: Reverter Otimizações"
     if "%SIMULATE%"=="1" (echo [SIMULAÇÃO] Reverter periféricos & pause & goto perifericos)
-    reg add "HKCU\Control Panel\Mouse" /v MouseSpeed /t REG_SZ /d 1 /f
-    reg add "HKCU\Control Panel\Keyboard" /v KeyboardDelay /t REG_SZ /d 1 /f
-    fsutil behavior set disableLastAccess 1
+    reg add "HKCU\Control Panel\Mouse" /v MouseSpeed /t REG_SZ /d 1 /f >nul 2>&1
+    reg add "HKCU\Control Panel\Keyboard" /v KeyboardDelay /t REG_SZ /d 1 /f >nul 2>&1
+    fsutil behavior set disableLastAccess 1 >nul 2>&1
     echo %g%[OK] Periféricos Revertidos!%w%
     pause
     goto perifericos
@@ -904,7 +936,7 @@ reg export "%~1" "%BACKUP_FILE%" /y >nul 2>&1
 if exist "%BACKUP_FILE%" (
     echo %q%[BACKUP] Chave salva em: %BACKUP_FILE%%w%
 ) else (
-    echo %q%[BACKUP] Chave não existia ainda (não foi necessário backup).%w%
+    echo %q%[BACKUP] Chave nao existia ainda - backup ignorado.%w%
 )
 goto :eof
 

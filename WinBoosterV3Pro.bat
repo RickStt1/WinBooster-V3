@@ -1,4 +1,3 @@
-
 @echo off
 :: ==========================================
 :: FORÇAR MODO ADMINISTRADOR AUTOMATICAMENTE
@@ -46,7 +45,9 @@ if not exist "%LOG_DIR%" mkdir "%LOG_DIR%"
 if not exist "%BACKUP_DIR%" mkdir "%BACKUP_DIR%"
 
 :: Gerar nome de log com data/hora
-for /f %%i in ('powershell -NoProfile -Command "Get-Date -Format yyyy-MM-dd_HH-mm-ss"') do set "STAMP=%%i"
+for /f %%i in ('powershell -NoProfile -Command "Get-Date -Format yyyy-MM-dd_HH-mm-ss"' 2^>nul) do set "STAMP=%%i"
+if "%STAMP%"=="" set "STAMP=%date:~-4%-%date:~3,2%-%date:~0,2%_%time:~0,2%-%time:~3,2%-%time:~6,2%"
+set "STAMP=%STAMP: =0%"
 set "LOGFILE=%LOG_DIR%\WinBooster_%STAMP%.log"
 echo [INICIO] WinBooster iniciado em %DATE% %TIME% > "%LOGFILE%"
 echo [INFO] Logs salvos em: %LOG_DIR% >> "%LOGFILE%"
@@ -147,6 +148,8 @@ if "%wg_op%"=="1" (
     winget install -e --id Python.Python.3.11
     winget install -e --id OpenJS.NodeJS
     echo %g%[OK] Kit DEV instalado!%w%
+    pause
+    goto menu
 )
 if "%wg_op%"=="2" (
     call :LogAction "Instalar Kit Essencial"
@@ -155,6 +158,8 @@ if "%wg_op%"=="2" (
     winget install -e --id Discord.Discord
     winget install -e --id Spotify.Spotify
     echo %g%[OK] Kit Essencial instalado!%w%
+    pause
+    goto menu
 )
 echo %r%Opção inválida.%w%
 pause
@@ -330,27 +335,24 @@ call :LogAction "Win: Tweaks de Privacidade"
 if "%SIMULATE%"=="1" (echo [SIMULAÇÃO] Tweaks de privacidade & pause & goto menuwindows)
 echo Aplicando Tweaks de Privacidade...
 
-:: Executando comandos (erros como "servico ja parado" serao ignorados silenciosamente)
-reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\DataCollection" /v AllowTelemetry /t REG_DWORD /d 0 /f >nul 2>&1
-reg add "HKCU\Software\Microsoft\Siuf\Rules" /v NumberOfSIUFInPeriod /t REG_DWORD /d 0 /f >nul 2>&1
-schtasks /Change /TN "Microsoft\Windows\Customer Experience Improvement Program\Consolidator" /Disable >nul 2>&1
-sc stop DiagTrack >nul 2>&1
-sc config DiagTrack start= disabled >nul 2>&1
-sc stop dmwappushservice >nul 2>&1
-sc config dmwappushservice start= disabled >nul 2>&1
-reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" /v Start_Recommendations /t REG_DWORD /d 0 /f >nul 2>&1
+set "_err=0"
+reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\DataCollection" /v AllowTelemetry /t REG_DWORD /d 0 /f >nul 2>&1 || set "_err=1"
+reg add "HKCU\Software\Microsoft\Siuf\Rules" /v NumberOfSIUFInPeriod /t REG_DWORD /d 0 /f >nul 2>&1 || set "_err=1"
+schtasks /Change /TN "Microsoft\Windows\Customer Experience Improvement Program\Consolidator" /Disable >nul 2>&1 || set "_err=1"
+sc stop DiagTrack >nul 2>&1 || set "_err=1"
+sc config DiagTrack start= disabled >nul 2>&1 || set "_err=1"
+sc stop dmwappushservice >nul 2>&1 || set "_err=1"
+sc config dmwappushservice start= disabled >nul 2>&1 || set "_err=1"
+reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" /v Start_Recommendations /t REG_DWORD /d 0 /f >nul 2>&1 || set "_err=1"
+
+if "%_err%"=="1" (
+    echo %r%[AVISO] Alguns tweaks falharam ou ja estavam desativados.%w%
+    pause
+    goto menuwindows
+)
 
 echo %g%[OK] Tweaks de Privacidade aplicados!%w%
 pause
-goto menuwindows
-
-
-
-echo %g%[OK] Tweaks de Privacidade aplicados!%w%
-set
-echo Aperte ENTER para voltar ao menu...
-pause
-echo [DEBUG] Indo para menuwindows...
 goto menuwindows
 
 :win_4
@@ -376,13 +378,18 @@ if "%escX%"=="1" (
     powershell -command "Get-AppxPackage *xboxapp* | Remove-AppxPackage" >nul 2>&1
     powershell -command "Get-AppxPackage *Microsoft.XboxGameOverlay* | Remove-AppxPackage" >nul 2>&1
     echo %g%[OK] Xbox removido!%w%
+    pause
+    goto menuwindows
 )
 if "%escX%"=="2" (
     if "%SIMULATE%"=="1" (echo [SIMULAÇÃO] Restaurar Xbox & pause & goto menuwindows)
     sc config "Xbox Game Monitoring" start= demand >nul 2>&1
     sc config "XblAuthManager" start= demand >nul 2>&1
     echo %g%[OK] Xbox restaurado!%w%
+    pause
+    goto menuwindows
 )
+echo %r%Opção inválida.%w%
 pause
 goto menuwindows
 
@@ -450,6 +457,7 @@ goto menuwindows
 
 :win_10
 call :LogAction "Win: Desativar Hibernação"
+if "%SIMULATE%"=="1" (echo [SIMULAÇÃO] powercfg -h off & pause & goto menuwindows)
 echo Desativando Hibernação...
 powercfg -h off >nul 2>&1
 echo %g%[OK] Hibernação desativada!%w%
@@ -512,7 +520,7 @@ goto menuwindows
 call :BackupReg "HKCU\Software\Microsoft\Siuf\Rules" "win_feedback"
 call :LogAction "Win: Bloquear Feedback"
 if "%SIMULATE%"=="1" (echo [SIMULAÇÃO] NumberOfSIUFInPeriod=0 & pause & goto menuwindows)
-reg add "HKCU\Software\Microsoft\Siuf\Rules" /v NumberOfSIUFInPeriod /t REG_DWORD /d 0 /f
+reg add "HKCU\Software\Microsoft\Siuf\Rules" /v NumberOfSIUFInPeriod /t REG_DWORD /d 0 /f >nul 2>&1
 echo %g%[OK] Feedback bloqueado!%w%
 pause
 goto menuwindows
@@ -562,8 +570,8 @@ goto menuwindows
 call :LogAction "Win: Resetar Cache de Miniaturas"
 if "%SIMULATE%"=="1" (echo [SIMULAÇÃO] del thumbcache & pause & goto menuwindows)
 taskkill /f /im explorer.exe >nul 2>&1
-del /f /s /q %LocalAppData%\Microsoft\Windows\Explorer\iconcache* >nul 2>&1
-del /f /s /q %LocalAppData%\Microsoft\Windows\Explorer\thumbcache* >nul 2>&1
+del /f /s /q "%LocalAppData%\Microsoft\Windows\Explorer\iconcache*" >nul 2>&1
+del /f /s /q "%LocalAppData%\Microsoft\Windows\Explorer\thumbcache*" >nul 2>&1
 start explorer.exe >nul 2>&1
 echo %g%[OK] Cache limpo!%w%
 pause
@@ -581,7 +589,8 @@ goto menuwindows
 call :BackupReg "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management\PrefetchParameters" "win_prefetch"
 call :LogAction "Win: Desativar Prefetch"
 if "%SIMULATE%"=="1" (echo [SIMULAÇÃO] SysMain disabled & pause & goto menuwindows)
-sc stop "SysMain" >nul 2>&1 & sc config "SysMain" start= disabled >nul 2>&1
+sc stop "SysMain" >nul 2>&1
+sc config "SysMain" start= disabled >nul 2>&1
 reg add "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management\PrefetchParameters" /v EnablePrefetcher /t REG_DWORD /d 0 /f >nul 2>&1
 echo %g%[OK] Prefetch desativado!%w%
 pause
@@ -649,7 +658,9 @@ goto menuwindows
 :win_28
 call :LogAction "Win: Limpar Cache de Rede"
 if "%SIMULATE%"=="1" (echo [SIMULAÇÃO] flushdns winsock reset & pause & goto menuwindows)
-ipconfig /flushdns & netsh winsock reset & netsh int ip reset
+ipconfig /flushdns
+netsh winsock reset
+netsh int ip reset
 echo %g%[OK] Cache de rede limpo!%w%
 pause
 goto menuwindows
@@ -657,39 +668,25 @@ goto menuwindows
 :win_29
 call :LogAction "Win: Limpar Temporários"
 if "%SIMULATE%"=="1" (echo [SIMULAÇÃO] del /temp & pause & goto menuwindows)
-del /s /f /q "%temp%\*.*" 2>nul
-del /s /f /q "%windir%\temp\*.*" 2>nul
+del /s /f /q "%temp%\*.*" >nul 2>&1
+del /s /f /q "%windir%\temp\*.*" >nul 2>&1
 cleanmgr.exe
 echo %g%[OK] Temporários limpos!%w%
 pause
 goto menuwindows
 
-:win_3
-call :BackupReg "HKLM\SOFTWARE\Policies\Microsoft\Windows\DataCollection" "win_privacidade"
-call :LogAction "Win: Tweaks de Privacidade"
-if "%SIMULATE%"=="1" (echo [SIMULAÇÃO] Tweaks de privacidade & pause & goto menuwindows)
-echo Aplicando Tweaks de Privacidade...
-
-set "_err=0"
-reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\DataCollection" /v AllowTelemetry /t REG_DWORD /d 0 /f >nul 2>&1 || set "_err=1"
-reg add "HKCU\Software\Microsoft\Siuf\Rules" /v NumberOfSIUFInPeriod /t REG_DWORD /d 0 /f >nul 2>&1 || set "_err=1"
-schtasks /Change /TN "Microsoft\Windows\Customer Experience Improvement Program\Consolidator" /Disable >nul 2>&1 || set "_err=1"
-sc stop DiagTrack >nul 2>&1 || set "_err=1"
-sc config DiagTrack start= disabled >nul 2>&1 || set "_err=1"
-sc stop dmwappushservice >nul 2>&1 || set "_err=1"
-sc config dmwappushservice start= disabled >nul 2>&1 || set "_err=1"
-reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" /v Start_Recommendations /t REG_DWORD /d 0 /f >nul 2>&1 || set "_err=1"
-
-if "%_err%"=="1" (
-    echo %r%[AVISO] Alguns tweaks falharam ou ja estavam desativados.%w%
+:win_30
+call :PrintHeader "EXCLUSÃO DEFENDER (CYBERSEC)"
+echo.
+echo %r%[AVISO] Esta ação adiciona uma pasta às exclusões de scan do Windows Defender.%w%
+echo %r%         O Kernel continua protegido. Use apenas em pastas confiáveis!%w%
+echo.
+set /p folder_path="Digite o caminho completo da pasta (ex: C:\Games\): "
+if "%folder_path%"=="" (
+    echo %r%[ERRO] Caminho vazio! Operação cancelada.%w%
     pause
     goto menuwindows
 )
-
-echo %g%[OK] Tweaks de Privacidade aplicados!%w%
-pause
-goto menuwindows
-
 echo.
 echo %r%[CONFIRMAÇÃO] Adicionar exclusão para: %folder_path% ? (S/N)%w%
 set /p conf_w30="Confirmar: "
@@ -697,7 +694,11 @@ if /i not "%conf_w30%"=="S" goto menuwindows
 call :LogAction "Win: Exclusão Defender para %folder_path%"
 if "%SIMULATE%"=="1" (echo [SIMULAÇÃO] Add-MpPreference -ExclusionPath & pause & goto menuwindows)
 powershell -Command "Add-MpPreference -ExclusionPath '%folder_path%'" >nul 2>&1
-echo %g%[OK] Pasta blindada contra scans do Defender. O Kernel continua protegido!%w%
+if %errorlevel% equ 0 (
+    echo %g%[OK] Pasta blindada contra scans do Defender. O Kernel continua protegido!%w%
+) else (
+    echo %r%[ERRO] Falha ao adicionar exclusão. Verifique o caminho e as permissões.%w%
+)
 pause
 goto menuwindows
 
